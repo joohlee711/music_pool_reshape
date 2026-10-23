@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>레코드박스 정보 보기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#f3f4f2;--panel:#fff;--fg:#17191a;--mute:#646a6b;--line:#d9dcda;--acc:#0f6e6a;--warm:#b0623a;--hi:#e6f1ef;
+--f:"IBM Plex Sans KR",system-ui,sans-serif;--m:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--hi:#1f2c2b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--hi:#1f2c2b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 var(--f)}
+.w{max-width:1200px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--acc)}
+.back{font-size:12.5px;text-decoration:none}
+h1{font-size:24px;margin:6px 0 4px}
+.lead{color:var(--mute);margin:0 0 14px;max-width:70ch}
+.stats{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--mute);margin:12px 0 0}
+.stats b{color:var(--fg);font-family:var(--m)}
+.load{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:var(--mute)}
+.load label{border:1px solid var(--line);border-radius:4px;padding:4px 10px;cursor:pointer;color:var(--fg);background:var(--panel)}
+.load input{display:none}
+.err{color:var(--warm)}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;margin-top:16px}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px;overflow:auto;max-height:calc(100vh - 40px);position:sticky;top:16px;align-self:start}
+.side h3{font-size:11.5px;letter-spacing:.04em;color:var(--mute);margin:10px 6px 4px;font-weight:600}
+.side h3:first-child{margin-top:2px}
+.side ul{list-style:none;margin:0;padding:0}
+.side ul ul{padding-left:14px}
+.side button{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;gap:8px;width:100%;padding:3px 6px;border-radius:4px;cursor:pointer}
+.side button:hover{background:var(--hi)}
+.side button[aria-current="true"]{background:var(--hi);color:var(--acc);font-weight:600}
+.side button:focus-visible{outline:2px solid var(--acc)}
+.side .folder{color:var(--mute);padding:3px 6px;font-size:13px}
+.side .cnt{color:var(--mute);font-family:var(--m);font-size:11.5px}
+@media (max-width:760px){.layout{grid-template-columns:minmax(0,1fr)}.side{max-height:260px;position:static}}
+.main{min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;margin-bottom:8px}
+.bar h2{font-size:17px;margin:0;flex:1 1 auto}
+.bar input{font:inherit;padding:5px 9px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg);width:min(100%,260px)}
+.tw{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 10px;text-align:left;border-top:1px solid var(--line);white-space:nowrap}
+thead th{border-top:0;font-size:12px;color:var(--mute);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel)}
+thead th[aria-sort]::after{content:" ▲";font-size:9px}
+thead th[aria-sort="descending"]::after{content:" ▼"}
+td.t{font-weight:600;white-space:normal;min-width:180px}
+td.t small{display:block;font-weight:400;color:var(--mute);font-size:12px}
+td.num{font-family:var(--m);font-size:12px;text-align:right}
+td.mute{color:var(--mute)}
+tr.open td{background:var(--hi)}
+tbody tr{cursor:pointer}
+.detail td{white-space:normal;cursor:default;background:var(--hi)}
+.detail dl{position:sticky;left:10px;max-width:calc(100vw - 72px);display:grid;grid-template-columns:max-content minmax(0,1fr);gap:2px 14px;margin:0;font-size:12.5px}
+.detail dt{color:var(--mute)}.detail dd{margin:0;overflow-wrap:anywhere}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--acc);color:var(--acc);border-radius:3px;padding:0 5px;margin:1px 2px 1px 0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.empty{padding:20px;color:var(--mute);text-align:center}
+.tags{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.tags section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.tags h4{margin:0 0 6px;font-size:13px}
+.note{font-size:12.5px;color:var(--mute);margin:8px 0 0}
+</style>
+</head>
+<body>
+<div class="w">
+<a class="back" href="../">← USB 폴더 이동표로</a>
+<h1>레코드박스 정보 보기</h1>
+<p class="lead">USB의 <code>export.pdb</code>·<code>exportExt.pdb</code>를 읽어서 보여주는 읽기 전용 페이지야. 기본은 레포에 올린 파일이고, 다른 USB 파일을 골라서 열 수도 있어. 고른 파일은 이 브라우저 안에서만 읽고 어디에도 올리지 않아.</p>
+<div class="load">
+  <label>export.pdb 열기<input type="file" id="fExp" accept=".pdb"></label>
+  <label>exportExt.pdb 열기<input type="file" id="fExt" accept=".pdb"></label>
+  <span id="src">불러오는 중…</span>
+</div>
+<div class="stats" id="stats"></div>
+<div class="layout" hidden id="layout">
+  <nav class="side" id="side" aria-label="플레이리스트"></nav>
+  <div class="main">
+    <div class="bar"><h2 id="title"></h2><input type="search" id="q" placeholder="제목·아티스트·앨범·키 검색" aria-label="검색"></div>
+    <div id="view"></div>
+  </div>
+</div>
+</div>
+<script src="pdb.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const COLOR = { Pink: '#e45ca8', Red: '#e0453c', Orange: '#ec8a2f', Yellow: '#e5c331', Green: '#4caf50', Aqua: '#3cc0c8', Blue: '#3f6fd8', Purple: '#9a55d6' };
+  const fmtTime = s => s ? Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0') : '';
+  const fmtBpm = b => b ? (Number.isInteger(b) ? b.toFixed(0) : b.toFixed(2)) : '';
+
+  const COLS = [
+    { k: 'title', h: '제목 / 아티스트' },
+    { k: 'album', h: '앨범' },
+    { k: 'genre', h: '장르' },
+    { k: 'bpm', h: 'BPM', num: true },
+    { k: 'key', h: '키' },
+    { k: 'duration', h: '길이', num: true },
+    { k: 'dateAdded', h: '추가일' },
+    { k: 'playCount', h: '재생', num: true },
+  ];
+
+  let lib = null, expBuf = null, extBuf = null;
+  let current = { kind: 'all' }, sort = { k: null, dir: 1 }, openId = null;
+
+  function build() {
+    const exp = RekordboxPdb.parseExport(expBuf);
+    const ext = extBuf ? RekordboxPdb.parseExportExt(extBuf) : null;
+    lib = RekordboxPdb.buildLibrary(exp, ext);
+    // 히스토리에 한 번이라도 나온 곡 = CDJ 재생 기록
+    const played = new Map();
+    lib.history.forEach(h => h.trackIds.forEach(id => played.set(id, (played.get(id) || 0) + 1)));
+    lib.tracks.forEach(t => { t.historyCount = played.get(t.id) || 0; });
+    const plCount = countLists(lib.playlists);
+    const tagUsed = new Set(lib.tracks.flatMap(t => t.tags)).size;
+    $('stats').innerHTML = [
+      ['곡', lib.tracks.length], ['플레이리스트', plCount], ['히스토리', lib.history.length],
+      ['아티스트', exp.artists.length], ['My Tag', lib.tagCategories.reduce((n, c) => n + c.tags.length, 0), ext ? `(곡에 붙은 것 ${tagUsed})` : ''],
+    ].map(([a, b, c]) => `<span>${a} <b>${b}</b>${c ? ' ' + c : ''}</span>`).join('');
+    renderSide();
+    render();
+    $('layout').hidden = false;
+  }
+  function countLists(nodes) { return nodes.reduce((n, x) => n + (x.isFolder ? countLists(x.children) : 1), 0); }
+
+  function navBtn(key, label, count) {
+    return `<button type="button" data-nav="${esc(key)}"><span>${esc(label)}</span><span class="cnt">${count}</span></button>`;
+  }
+  function treeHtml(nodes) {
+    return '<ul>' + nodes.map(n => n.isFolder
+      ? `<li><div class="folder">▸ ${esc(n.name)}</div>${treeHtml(n.children)}</li>`
+      : `<li>${navBtn('pl:' + n.id, n.name, n.trackIds.length)}</li>`).join('') + '</ul>';
+  }
+  function renderSide() {
+    let h = '<h3>라이브러리</h3><ul><li>' + navBtn('all', '전체 곡', lib.tracks.length) + '</li>';
+    if (lib.tagCategories.length) h += '<li>' + navBtn('tags', 'My Tag 목록', lib.tagCategories.reduce((n, c) => n + c.tags.length, 0)) + '</li>';
+    h += '</ul><h3>플레이리스트</h3>' + treeHtml(lib.playlists);
+    if (lib.history.length) h += '<h3>히스토리 (CDJ 재생 기록)</h3><ul>' + lib.history.map(x => '<li>' + navBtn('hist:' + x.id, x.name, x.trackIds.length) + '</li>').join('') + '</ul>';
+    $('side').innerHTML = h;
+    markNav();
+  }
+  function navKey() { return current.kind === 'all' || current.kind === 'tags' ? current.kind : current.kind + ':' + current.id; }
+  function markNav() {
+    const k = navKey();
+    $('side').querySelectorAll('button').forEach(b => b.setAttribute('aria-current', String(b.dataset.nav === k)));
+  }
+
+  function findList(nodes, id) {
+    for (const n of nodes) { if (n.id === id) return n; const c = findList(n.children, id); if (c) return c; }
+    return null;
+  }
+
+  function currentTracks() {
+    if (current.kind === 'all') return { name: '전체 곡', ordered: false, rows: lib.tracks.map(t => ({ t })) };
+    const src = current.kind === 'pl' ? findList(lib.playlists, current.id) : lib.history.find(h => h.id === current.id);
+    if (!src) return { name: '', ordered: true, rows: [] };
+    return { name: src.name, ordered: true, rows: src.trackIds.map((id, i) => ({ n: i + 1, t: lib.trackById.get(id) })).filter(r => r.t) };
+  }
+
+  function render() {
+    markNav();
+    if (current.kind === 'tags') return renderTags();
+    const { name, ordered, rows } = currentTracks();
+    const q = $('q').value.trim().toLowerCase();
+    let list = q ? rows.filter(({ t }) => [t.title, t.artist, t.album, t.genre, t.key, t.mixName, t.comment, ...t.tags].join(' ').toLowerCase().includes(q)) : rows.slice();
+    if (sort.k) {
+      const k = sort.k;
+      list.sort((a, b) => {
+        const x = a.t[k], y = b.t[k];
+        const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'ko');
+        return c * sort.dir;
+      });
+    }
+    $('title').textContent = `${name} · ${list.length}곡`;
+    if (!list.length) { $('view').innerHTML = '<div class="tw"><div class="empty">곡이 없어</div></div>'; return; }
+    const head = (ordered ? '<th data-k="">#</th>' : '') + COLS.map(c => `<th data-k="${c.k}"${sort.k === c.k ? ` aria-sort="${sort.dir > 0 ? 'ascending' : 'descending'}"` : ''}>${c.h}</th>`).join('');
+    const span = COLS.length + (ordered ? 1 : 0);
+    const body = list.map(({ n, t }) => {
+      const dot = COLOR[t.color] ? `<span class="dot" style="background:${COLOR[t.color]}" title="${esc(t.color)}"></span>` : '';
+      let tr = `<tr data-id="${t.id}"${openId === t.id ? ' class="open"' : ''}>` + (ordered ? `<td class="num">${n}</td>` : '') +
+        `<td class="t">${dot}${esc(t.title)}${t.mixName ? ` <span class="mute">(${esc(t.mixName)})</span>` : ''}<small>${esc(t.artist)}</small>${t.tags.map(x => `<span class="tag">${esc(x)}</span>`).join('')}</td>` +
+        `<td class="mute">${esc(t.album)}</td><td>${esc(t.genre)}</td><td class="num">${fmtBpm(t.bpm)}</td><td>${esc(t.key)}</td>` +
+        `<td class="num">${fmtTime(t.duration)}</td><td class="mute">${esc(t.dateAdded)}</td><td class="num">${t.historyCount || ''}</td></tr>`;
+      if (openId === t.id) tr += `<tr class="detail"><td colspan="${span}">${detail(t)}</td></tr>`;
+      return tr;
+    }).join('');
+    $('view').innerHTML = `<div class="tw"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
+      <p class="note">재생 = 히스토리(CDJ 재생 기록)에 나온 횟수. 줄을 누르면 자세한 정보가 보여.</p>`;
+  }
+
+  function detail(t) {
+    const inLists = [];
+    (function walk(nodes, path) {
+      for (const n of nodes) {
+        const p = path.concat(n.name);
+        if (!n.isFolder && n.trackIds.includes(t.id)) inLists.push(p.join(' / '));
+        walk(n.children, n.isFolder ? p : path);
+      }
+    })(lib.playlists, []);
+    const f = [
+      ['아티스트', t.artist], ['리믹서', t.remixer], ['원곡 아티스트', t.originalArtist], ['앨범', t.album],
+      ['레이블', t.label], ['연도', t.year || ''], ['발매일', t.releaseDate], ['코멘트', t.comment],
+      ['색', t.color], ['별점', t.rating ? '★'.repeat(t.rating) : ''], ['My Tag', t.tags.join(', ')],
+      ['비트레이트', t.bitrate ? t.bitrate + ' kbps' : ''], ['샘플', t.sampleRate ? `${t.sampleRate / 1000} kHz / ${t.sampleDepth} bit` : ''],
+      ['파일 크기', t.fileSize ? (t.fileSize / 1048576).toFixed(1) + ' MB' : ''], ['분석일', t.analyzeDate],
+      ['파일 경로', t.filePath], ['들어간 플레이리스트', inLists.join('\n')],
+    ].filter(([, v]) => v);
+    return '<dl>' + f.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v).replace(/\n/g, '<br>')}</dd>`).join('') + '</dl>';
+  }
+
+  function renderTags() {
+    $('title').textContent = 'My Tag 목록';
+    const used = new Map();
+    lib.tracks.forEach(t => t.tags.forEach(x => used.set(x, (used.get(x) || 0) + 1)));
+    $('view').innerHTML = '<div class="tags">' + lib.tagCategories.map(c =>
+      `<section><h4>${esc(c.name)}</h4>${c.tags.map(x => `<span class="tag">${esc(x.name)}${used.get(x.name) ? ' ' + used.get(x.name) : ''}</span>`).join('') || '<span class="mute">없음</span>'}</section>`).join('') + '</div>' +
+      (used.size ? '' : '<p class="note">지금 USB에는 곡에 붙은 My Tag가 하나도 없어. 태그 목록만 있는 상태야.</p>');
+  }
+
+  $('side').addEventListener('click', e => {
+    const b = e.target.closest('button[data-nav]');
+    if (!b) return;
+    const k = b.dataset.nav;
+    current = k === 'all' || k === 'tags' ? { kind: k } : { kind: k.split(':')[0], id: Number(k.split(':')[1]) };
+    sort = { k: null, dir: 1 }; openId = null;
+    render();
+  });
+  $('view').addEventListener('click', e => {
+    const th = e.target.closest('th[data-k]');
+    if (th) {
+      const k = th.dataset.k || null;
+      sort = sort.k === k && k ? { k, dir: -sort.dir } : { k, dir: 1 };
+      return render();
+    }
+    const tr = e.target.closest('tr[data-id]');
+    if (tr) { const id = Number(tr.dataset.id); openId = openId === id ? null : id; render(); }
+  });
+  $('q').addEventListener('input', render);
+
+  function readFile(input, cb) {
+    input.addEventListener('change', () => {
+      const f = input.files[0];
+      if (!f) return;
+      f.arrayBuffer().then(b => { cb(b); $('src').textContent = '직접 고른 파일: ' + f.name; tryBuild(); });
+    });
+  }
+  readFile($('fExp'), b => { expBuf = b; });
+  readFile($('fExt'), b => { extBuf = b; });
+
+  function tryBuild() {
+    if (!expBuf) return;
+    try { build(); }
+    catch (err) { $('src').innerHTML = `<span class="err">읽기 실패: ${esc(err.message)}</span>`; }
+  }
+
+  const get = url => fetch(url).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
+  Promise.all([get('../export.pdb'), get('../exportExt.pdb')]).then(([a, b]) => {
+    if (expBuf) return; // 그 사이 직접 고른 파일이 있으면 그걸 유지
+    if (!a) { $('src').innerHTML = '<span class="err">레포의 export.pdb를 못 불러왔어. 위 버튼으로 직접 열어줘.</span>'; return; }
+    expBuf = a; extBuf = b;
+    $('src').textContent = '레포에 올린 파일' + (b ? '' : ' (exportExt.pdb 없음)');
+    tryBuild();
+  });
+})();
+</script>
+</body>
+</html>
