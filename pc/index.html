@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PC 정리 체크리스트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#f3f4f2;--panel:#fff;--fg:#17191a;--mute:#646a6b;--line:#d9dcda;--acc:#0f6e6a;--warm:#b0623a;--hi:#e6f1ef;
+--f:"IBM Plex Sans KR",system-ui,sans-serif;--m:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--hi:#1f2c2b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--hi:#1f2c2b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 var(--f)}
+.w{max-width:980px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--acc)}
+.back{font-size:12.5px;text-decoration:none}
+h1{font-size:24px;margin:6px 0 4px}
+.lead{color:var(--mute);margin:0;max-width:68ch}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:8px;margin:16px 0 0}
+.toc a{display:block;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;text-decoration:none;color:var(--fg)}
+.toc a:hover{border-color:var(--acc)}
+.toc b{display:block;font-size:13px}
+.toc span{font-family:var(--m);font-size:12px;color:var(--mute)}
+.bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:16px 0 0;font-size:12.5px;color:var(--mute)}
+.bar input[type=search]{font:inherit;font-size:14px;padding:5px 9px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg);width:min(100%,280px)}
+.bar label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.bar button{font:inherit;background:none;border:1px solid var(--line);color:var(--fg);border-radius:4px;padding:4px 10px;cursor:pointer}
+h2{font-size:18px;margin:34px 0 2px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;scroll-margin-top:12px}
+h2 .p{font-family:var(--m);font-size:13px;color:var(--acc);font-weight:500}
+.hint{color:var(--mute);margin:0 0 10px;max-width:72ch;font-size:13px}
+.hint b{color:var(--fg);font-weight:600}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 12px}
+.list ul{list-style:none;margin:0;padding:0}
+.list li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.list h3{font-size:12.5px;margin:10px 0 2px;color:var(--acc);font-family:var(--m);font-weight:500}
+.list h3:first-child{margin-top:6px}
+input[type=checkbox]{accent-color:var(--acc);width:16px;height:16px;margin:3px 0 0;flex:none}
+li label{flex:1;min-width:0;cursor:pointer;display:flex;flex-direction:column}
+input:checked+label{opacity:.4;text-decoration:line-through}
+.t{font-weight:600;overflow-wrap:anywhere}
+.a{color:var(--mute);font-size:12.5px}
+.meta{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:3px;font-size:11.5px;color:var(--mute)}
+.meta .num{font-family:var(--m)}
+.chip{border:1px solid var(--line);border-radius:3px;padding:0 5px}
+.chip.pl{border-color:var(--acc);color:var(--acc)}
+.chip.dir{border-style:dashed}
+body.hide-done li.done{display:none}
+li.miss{display:none}
+.empty{color:var(--mute);font-size:12.5px;padding:8px 0}
+.err{color:var(--warm)}
+</style>
+</head>
+<body>
+<div class="w">
+<a class="back" href="../">← USB 폴더 이동표로</a>
+<h1>PC 정리 체크리스트</h1>
+<p class="lead">USB에는 없고 PC rekordbox에만 있는 곡 목록이야. 분류는 임의로 나눈 거라 맞는지 직접 보면서 고쳐줘. 각 분류 아래 <b>제안</b>은 참고용이야. 처리한 곡을 체크하면 이 브라우저에 저장돼.</p>
+<div class="toc" id="toc"></div>
+<div class="bar">
+  <input type="search" id="q" placeholder="곡·아티스트·플레이리스트 검색" aria-label="검색">
+  <label><input type="checkbox" id="hide"> 체크한 곡 숨기기</label>
+  <span id="total"></span>
+  <button type="button" id="reset">체크 모두 지우기</button>
+</div>
+<div id="out"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const K = 'pcmove-v1';
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(K) || '{}'); } catch (e) {}
+  const save = () => { try { localStorage.setItem(K, JSON.stringify(done)); } catch (e) {} };
+
+  // 분류 번호별 제안. CSV에 없는 번호가 와도 그냥 제안 없이 보여줌
+  const HINT = {
+    '1': '다시 쓸 곡은 USB <b>POOL</b>로, 아닌 곡은 <b>OOC</b>로 보내.',
+    '3': '클럽 분위기 참고용이야. <b>클럽별 분류</b> 폴더는 그대로 두고, 실제로 틀 곡만 POOL로 골라.',
+    '4': '예전 리스트에만 남은 곡이야. 쓸 곡만 POOL로 보내고, 나머지는 리스트째 <b>ARCHIVE</b>로 옮겨.',
+    '5': '플레이리스트에 한 번도 안 들어간 곡이야. 들어보고 <b>POOL / OOC / 삭제</b> 중에 골라.',
+    '8': 'USB에 같은 곡이 이미 있어. 태그만 다르니까 USB 쪽이 맞는지 확인하고 PC 쪽 중복 파일은 정리해.',
+    '9': '샘플·녹음 파일이야. 곡 정리 대상이 아니니까 그냥 두거나 따로 모아둬.',
+  };
+  // REF 분류는 클럽별로 묶어서 보여줌
+  const CLUB_PREFIX = 'Libraries/클럽별 분류/';
+
+  function parseCsv(text) {
+    text = text.replace(/^﻿/, '');
+    const rows = [];
+    let row = [], cell = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) {
+        if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+        else if (c === '"') q = false;
+        else cell += c;
+      } else if (c === '"') q = true;
+      else if (c === ',') { row.push(cell); cell = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(cell); cell = '';
+        if (row.some(x => x !== '')) rows.push(row);
+        row = [];
+      } else cell += c;
+    }
+    row.push(cell);
+    if (row.some(x => x !== '')) rows.push(row);
+    const head = rows.shift();
+    return rows.map(r => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ''])));
+  }
+
+  function splitCat(name) {
+    const m = name.match(/^(\d+)\s+(.*)$/);
+    return m ? { no: m[1], label: m[2] } : { no: name, label: name };
+  }
+  const shortList = p => p.replace(/^Libraries\//, '');
+  const fmtBpm = b => { const n = parseFloat(b); return n ? (Number.isInteger(n) ? String(n) : n.toFixed(2)) : ''; };
+
+  let domSeq = 0;
+  function rowHtml(r) {
+    const dom = 'r' + (domSeq++);
+    const lists = r.lists.map(p => `<span class="chip pl">${esc(shortList(p))}</span>`).join('');
+    const meta = [
+      r['장르'] && `<span>${esc(r['장르'])}</span>`,
+      fmtBpm(r['BPM']) && `<span class="num">${fmtBpm(r['BPM'])} BPM</span>`,
+      r['추가일'] && `<span class="num">${esc(r['추가일'])}</span>`,
+      lists,
+      r['파일 폴더'] && `<span class="chip dir" title="파일 폴더">${esc(r['파일 폴더'])}</span>`,
+    ].filter(Boolean).join('');
+    return `<li data-id="${esc(r.id)}" data-s="${esc(r.search)}"${done[r.id] ? ' class="done"' : ''}>` +
+      `<input type="checkbox" id="${dom}"${done[r.id] ? ' checked' : ''}>` +
+      `<label for="${dom}"><span class="t">${esc(r['곡'])}</span><span class="a">${esc(r['아티스트'] || '아티스트 없음')}</span><span class="meta">${meta}</span></label></li>`;
+  }
+
+  function render(data) {
+    const cats = new Map();
+    data.forEach(r => {
+      r.lists = r['PC 플레이리스트'] ? r['PC 플레이리스트'].split(' / ').map(s => s.trim()).filter(Boolean) : [];
+      r.id = 'pc:' + r['분류'].split(' ')[0] + ':' + r['아티스트'] + ':' + r['곡'];
+      r.search = [r['아티스트'], r['곡'], r['장르'], r['PC 플레이리스트'], r['파일 폴더']].join(' ').toLowerCase();
+      if (!cats.has(r['분류'])) cats.set(r['분류'], []);
+      cats.get(r['분류']).push(r);
+    });
+
+    let toc = '', out = '';
+    for (const [name, rows] of cats) {
+      const { no, label } = splitCat(name);
+      const anchor = 'c' + no;
+      toc += `<a href="#${anchor}"><b>${esc(no)} ${esc(label)}</b><span data-prog="${anchor}"></span></a>`;
+      let body;
+      if (no === '3') {
+        // 곡 하나가 여러 클럽에 들어있으면 클럽마다 보여주되 체크는 공유
+        const clubs = new Map();
+        rows.forEach(r => {
+          const cs = r.lists.filter(p => p.startsWith(CLUB_PREFIX)).map(p => p.slice(CLUB_PREFIX.length));
+          (cs.length ? cs : ['기타']).forEach(c => { if (!clubs.has(c)) clubs.set(c, []); clubs.get(c).push(r); });
+        });
+        body = [...clubs.keys()].sort((a, b) => a.localeCompare(b, 'ko'))
+          .map(c => `<h3>${esc(c)} · ${clubs.get(c).length}</h3><ul>${clubs.get(c).map(rowHtml).join('')}</ul>`).join('');
+      } else {
+        body = `<ul>${rows.map(rowHtml).join('')}</ul>`;
+      }
+      out += `<section data-cat="${anchor}"><h2 id="${anchor}"><span>${esc(no)} ${esc(label)}</span><span class="p" data-prog="${anchor}"></span></h2>` +
+        (HINT[no] ? `<p class="hint">제안: ${HINT[no]}</p>` : '') +
+        `<div class="list">${body}<div class="empty" hidden>검색 결과 없음</div></div></section>`;
+    }
+    $('toc').innerHTML = toc;
+    $('out').innerHTML = out;
+    sync();
+  }
+
+  // 체크 상태·진행률·검색 결과를 화면에 반영
+  function sync() {
+    const q = $('q').value.trim().toLowerCase();
+    let all = 0, fin = 0;
+    document.querySelectorAll('section[data-cat]').forEach(sec => {
+      const ids = new Set([...sec.querySelectorAll('li')].map(li => li.dataset.id));
+      const n = ids.size, d = [...ids].filter(id => done[id]).length;
+      all += n; fin += d;
+      document.querySelectorAll(`[data-prog="${sec.dataset.cat}"]`).forEach(el => { el.textContent = `${d} / ${n}`; });
+      let visible = 0;
+      sec.querySelectorAll('li').forEach(li => {
+        const miss = q && !li.dataset.s.includes(q);
+        li.classList.toggle('miss', !!miss);
+        li.classList.toggle('done', !!done[li.dataset.id]);
+        li.querySelector('input').checked = !!done[li.dataset.id];
+        if (!miss && !(done[li.dataset.id] && $('hide').checked)) visible++;
+      });
+      sec.querySelectorAll('h3').forEach(h => {
+        const ul = h.nextElementSibling;
+        h.hidden = ![...ul.children].some(li => !li.classList.contains('miss') && !(li.classList.contains('done') && $('hide').checked));
+      });
+      sec.querySelector('.empty').hidden = visible > 0;
+      sec.querySelector('.empty').textContent = q ? '검색 결과 없음' : '다 처리했어';
+    });
+    $('total').textContent = `전체 ${fin} / ${all} 처리`;
+  }
+
+  $('out').addEventListener('change', e => {
+    const li = e.target.closest('li[data-id]');
+    if (!li) return;
+    if (e.target.checked) done[li.dataset.id] = true; else delete done[li.dataset.id];
+    save(); sync();
+  });
+  $('q').addEventListener('input', sync);
+  $('hide').addEventListener('change', () => { document.body.classList.toggle('hide-done', $('hide').checked); sync(); });
+  $('reset').addEventListener('click', () => {
+    if (!confirm('체크를 모두 지울까?')) return;
+    done = {}; try { localStorage.removeItem(K); } catch (e) {}
+    sync();
+  });
+
+  fetch('pc_only.csv').then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(t => render(parseCsv(t)))
+    .catch(err => { $('out').innerHTML = `<p class="err">pc_only.csv를 못 불러왔어 (${esc(err.message)})</p>`; });
+})();
+</script>
+</body>
+</html>
