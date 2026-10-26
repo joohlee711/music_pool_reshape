@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>싱크 체크리스트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* phase 1 이동표와 같은 토큰·체크리스트 스타일 */
+:root{--bg:#f3f4f2;--panel:#fff;--fg:#17191a;--mute:#646a6b;--line:#d9dcda;--acc:#0f6e6a;--warm:#b0623a;--gs:#8a7a2a;--hi:#e6f1ef;
+--f:"IBM Plex Sans KR",system-ui,sans-serif;--m:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--gs:#d6c26a;--hi:#1f2c2b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--gs:#d6c26a;--hi:#1f2c2b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 var(--f)}
+.w{max-width:980px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--acc)}
+.back{font-size:12.5px;text-decoration:none}
+h1{font-size:24px;margin:6px 0 4px}
+.lead{color:var(--mute);margin:0;max-width:68ch}
+code{font-family:var(--m);font-size:12.5px;color:var(--acc)}
+.bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:14px 0 0;font-size:12.5px;color:var(--mute)}
+.bar button{font:inherit;background:none;border:1px solid var(--line);color:var(--fg);border-radius:4px;padding:4px 10px;cursor:pointer}
+h2{font-size:18px;margin:34px 0 2px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+h2 small{font-weight:400;font-size:12.5px;color:var(--mute)}
+h2 .p{font-family:var(--m);font-size:13px;color:var(--acc);font-weight:500}
+.items{display:grid;gap:10px;margin-top:10px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px;min-width:0}
+.item>.head{display:flex;gap:10px;align-items:flex-start}
+.item>.head label{flex:1;min-width:0;cursor:pointer;font-weight:600}
+.item>.head .cnt{font-family:var(--m);font-size:12px;color:var(--mute);white-space:nowrap}
+.item .desc{color:var(--mute);font-size:12.5px;margin:4px 0 0 26px}
+.item.placeholder{border-style:dashed}
+input[type=checkbox]{accent-color:var(--acc);width:16px;height:16px;margin:3px 0 0;flex:none}
+.head input:checked+label{opacity:.45;text-decoration:line-through}
+ul.tracks{list-style:none;margin:8px 0 0 26px;padding:0}
+ul.tracks li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:5px 0;border-top:1px solid var(--line)}
+ul.tracks li label{flex:1 1 200px;min-width:0;display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+ul.tracks li label span{display:flex;flex-direction:column;min-width:0}
+ul.tracks input:checked~span{opacity:.4;text-decoration:line-through}
+.t{font-weight:600;overflow-wrap:anywhere}.a{color:var(--mute);font-size:12.5px}
+.meta{font-family:var(--m);font-size:11.5px;color:var(--mute)}
+.sub{font-size:12px;color:var(--acc);margin:10px 0 0 26px;font-weight:600}
+.choices{display:flex;flex-wrap:wrap;gap:4px}
+.choices button{font:inherit;font-size:12px;padding:2px 8px;border-radius:3px;border:1px solid var(--line);background:none;color:var(--mute);cursor:pointer}
+.choices button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--panel);font-weight:600}
+.choices button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.note{font-size:12.5px;color:var(--mute);margin:8px 0 0 26px}
+.warn{color:var(--warm)}
+</style>
+</head>
+<body>
+<div class="w">
+<a class="back" href="../">← 홈으로</a>
+<h1>싱크 체크리스트</h1>
+<p class="lead">Apple Music에서 정한 걸 USB에 맞추는 할 일 목록이야. 체크랑 선택 버튼 상태는 이 브라우저에 저장돼(폰이랑 맥북은 따로 저장돼).</p>
+<div class="bar"><span id="total"></span><button type="button" id="reset">체크·선택 모두 지우기</button></div>
+<div id="out"></div>
+</div>
+<script src="../rekordbox/pdb.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // 인라인 `코드` 표기만 허용
+  const fmt = s => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  const K = 'sync-v1';
+  let st = { done: {}, pick: {} };
+  try { st = Object.assign(st, JSON.parse(localStorage.getItem(K) || '{}')); } catch (e) {}
+  const save = () => { try { localStorage.setItem(K, JSON.stringify(st)); } catch (e) {} };
+
+  const OOC = ['OOC', '감상'];
+  const ENERGY = ['Warm', 'Groove', 'Drive', 'Peak', '엔딩', '변칙'];
+  const T = (title, artist) => ({ title, artist });
+  const by = (artist, ...titles) => titles.map(t => T(t, artist));
+
+  // FLOOR/0 추정 중 CLS 03에서 실제로 튼 곡 (먼저 처리)
+  const FLOOR0_FIRST = [T('Quiet Judgment', 'Cassulle'), T('Cosmic Glasses', 'Oscar Mulero'), T('Shade', 'Setaoc Mass'), T('Isolation', 'Thomas Bianco')];
+
+  const SECTIONS = [
+    { title: 'Apple Music', sub: '폰', items: [
+      { id: 'am-rename-drop', text: '`3 DROP` 이름을 `3 감상`으로 바꾸기',
+        sub: '지금 들어있는 곡', list: [T('Curzon', 'Demdike Stare'), T('lawless world', 'Vladislav Delay'), T('Tractive', 'Miles Whittaker')] },
+      { id: 'am-dig01', text: '1월 DIG 17곡 → `2 OOC`', tracks: [
+        ...by('Tremor', 'Dissociative Perception', 'Surface Tension', 'High Alert', 'Final Remarks'),
+        ...by('Maccari & Lofe', 'Echoes from Ashes', 'Grind & Grit'),
+        ...by('Juri Heidemann', 'Kooooo', 'Semuter', 'Essas', 'Ulllll', 'Wowka', 'Fifth'),
+        ...by('Avant.OCS & Red Rooms', 'Pulsar', 'Blade'),
+        ...by('Gannein', 'Time Chamber', 'Dialect'),
+        T('Prononciation', 'Stanislav Tolkachev')] },
+      { id: 'am-dig04', text: '4월 DIG 14곡 → `2 OOC`', tracks: [
+        ...by('Cousin', 'Disting', 'No King'), T('Rummage', 'Cousin & Priori'), T('Cascadia', 'Command D & Zara'),
+        ...by('Command D', 'Stat Point', 'CG Phrase'), ...by('Priori', 'Color Me', '9'),
+        T('Intrinsic Values', 'Polygonia'), T('Duration', 'Conna Haraway'), T('Cloister', 'Al Wootton'),
+        T('Kilim', 'Konduku'), T('8-Bit Flex', 'Rings Around Saturn'), T('Inverted Frequencies', 'Sound Virus')] },
+      { id: 'am-usbooc', text: 'USB OOC에만 있는 10곡 → `2 OOC` 또는 `3 감상`', choices: OOC, tracks: [
+        ...by('HITORI TORI', 'Failing Upwards', 'Age Responsibly', 'Unfared Sunds', 'Mindful of Fall', 'Triaf', 'Nouve', 'Teale Floes', 'Coahel Refixed'),
+        T('Ranidae', 'BufoBufo'), T('Kalliope', 'Kessell')] },
+    ] },
+    { title: 'USB', sub: '맥북 rekordbox', items: [
+      { id: 'usb-human-condition', text: 'Human Condition (Kosh): `POOL/FLOOR/4 Peak` → `TEMP/OOC`' },
+      { id: 'usb-hyper', text: 'Hyper Hyper Dancy Hardcore (Valerie Ace): USB에서 제거하고 `TEMP/DROP` 폴더 삭제',
+        desc: '하이퍼 곡은 USB에 두지 않고, USB에는 DROP 폴더도 두지 않아.' },
+      { id: 'usb-floor0', text: '`FLOOR/0 추정` → 에너지 칸 정하기', choices: ENERGY, floor0: true,
+        desc: 'CLS 03에서 실제로 튼 4곡을 먼저 정하고, 나머지는 USB의 export.pdb에서 자동으로 불러와.' },
+    ] },
+    { title: '맥북 1회 셋업: `_PC 미분류`', items: [
+      { id: 'mac-copy-off', text: 'Music 앱 설정 → 파일 → "보관함에 추가할 때 Music 폴더로 파일 복사" 끄기' },
+      { id: 'mac-sync-on', text: '설정 → 일반 → 보관함 동기화 켜기' },
+      { id: 'mac-pc-list', text: '플레이리스트 `_PC 미분류`를 만들고 Desktop/Music, Desktop/Bandcamp, Aleepy Music Box 폴더를 통째로 끌어다 넣기' },
+      { id: 'mac-judge', text: '폰에서 `OOC` / `감상` / `하이퍼`로 판정하기. 다 비우면 보기 → 중복된 항목 보기로 중복 정리' },
+    ] },
+    { title: 'CLS 04', sub: '2026-10-26 수업 후', items: [
+      { id: 'cls04-history', placeholder: true, text: 'PC rekordbox 히스토리 캡처 → 튼 곡은 `CLS 04` + POOL, 안 튼 10월 DIG 곡은 `OOC`',
+        desc: '곡 목록은 수업 끝나고 채울 거야.' },
+    ] },
+  ];
+
+  const tid = (itemId, t) => itemId + ':' + t.artist + ':' + t.title;
+
+  function trackHtml(item, t, extraMeta) {
+    const id = tid(item.id, t), dom = 'd' + (domSeq++);
+    const picked = st.pick[id];
+    const choices = item.choices ? `<div class="choices" role="group" aria-label="${esc(t.title)} 선택">${item.choices.map(c =>
+      `<button type="button" data-pick="${esc(id)}" data-v="${esc(c)}" aria-pressed="${picked === c}">${esc(c)}</button>`).join('')}</div>` : '';
+    return `<li><label for="${dom}"><input type="checkbox" id="${dom}" data-done="${esc(id)}"${st.done[id] ? ' checked' : ''}>` +
+      `<span><span class="t">${esc(t.title)}</span><span class="a">${esc(t.artist)}${extraMeta ? ` <span class="meta">${esc(extraMeta)}</span>` : ''}</span></span></label>${choices}</li>`;
+  }
+
+  let domSeq = 0;
+  function itemHtml(item) {
+    const dom = 'd' + (domSeq++);
+    let h = `<div class="item${item.placeholder ? ' placeholder' : ''}" data-item="${esc(item.id)}"><div class="head">` +
+      `<input type="checkbox" id="${dom}" data-done="${esc(item.id)}"${st.done[item.id] ? ' checked' : ''}>` +
+      `<label for="${dom}">${fmt(item.text)}</label><span class="cnt" data-cnt="${esc(item.id)}"></span></div>`;
+    if (item.desc) h += `<p class="desc">${fmt(item.desc)}</p>`;
+    if (item.list) h += `<p class="sub">${esc(item.sub)}</p><ul class="tracks">${item.list.map(t => `<li><span><span class="t">${esc(t.title)}</span> <span class="a">${esc(t.artist)}</span></span></li>`).join('')}</ul>`;
+    if (item.tracks) h += `<ul class="tracks">${item.tracks.map(t => trackHtml(item, t)).join('')}</ul>`;
+    if (item.floor0) h += `<p class="sub">1단계 · CLS 03에서 튼 4곡</p><ul class="tracks" id="floor0-first"></ul>` +
+      `<p class="sub">2단계 · 나머지 (export.pdb에서 자동)</p><ul class="tracks" id="floor0-rest"></ul><p class="note" id="floor0-note">export.pdb 읽는 중…</p>`;
+    return h + '</div>';
+  }
+
+  function render() {
+    domSeq = 0;
+    $('out').innerHTML = SECTIONS.map((s, i) =>
+      `<section data-sec="${i}"><h2><span>${fmt(s.title)}</span>${s.sub ? `<small>${esc(s.sub)}</small>` : ''}<span class="p" data-sp="${i}"></span></h2>` +
+      `<div class="items">${s.items.map(itemHtml).join('')}</div></section>`).join('');
+  }
+
+  // 곡 진행률과 섹션 진행률 갱신
+  function sync() {
+    let all = 0, fin = 0;
+    document.querySelectorAll('section[data-sec]').forEach(sec => {
+      let n = 0, d = 0;
+      sec.querySelectorAll('.item').forEach(it => {
+        const boxes = [...it.querySelectorAll('ul.tracks input[data-done]')];
+        const cnt = it.querySelector('[data-cnt]');
+        if (boxes.length) {
+          const nd = boxes.filter(b => b.checked).length;
+          const np = it.querySelectorAll('button[aria-pressed="true"]').length;
+          cnt.textContent = `${nd} / ${boxes.length}` + (it.querySelector('.choices') ? ` · 선택 ${np}` : '');
+        } else cnt.textContent = '';
+        n++; if (it.querySelector('.head input').checked) d++;
+      });
+      sec.querySelector('[data-sp]').textContent = `${d} / ${n}`;
+      all += n; fin += d;
+    });
+    $('total').textContent = `할 일 ${fin} / ${all} 완료`;
+  }
+
+  $('out').addEventListener('change', e => {
+    const id = e.target.dataset.done;
+    if (!id) return;
+    if (e.target.checked) st.done[id] = true; else delete st.done[id];
+    save(); sync();
+  });
+  $('out').addEventListener('click', e => {
+    const b = e.target.closest('button[data-pick]');
+    if (!b) return;
+    const id = b.dataset.pick;
+    st.pick[id] = st.pick[id] === b.dataset.v ? undefined : b.dataset.v;
+    if (!st.pick[id]) delete st.pick[id];
+    b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(st.pick[id] === x.dataset.v)));
+    save(); sync();
+  });
+  $('reset').addEventListener('click', () => {
+    if (!confirm('체크랑 선택을 모두 지울까?')) return;
+    st = { done: {}, pick: {} };
+    try { localStorage.removeItem(K); } catch (e) {}
+    render(); fillFloor0(lastLib); sync();
+  });
+
+  // ---- FLOOR/0 추정: export.pdb에서 플레이리스트를 찾아 채움 ----
+  const norm = s => String(s || '').toLowerCase().normalize('NFC').replace(/\s+/g, ' ').trim();
+  const sameTrack = (t, x) => norm(x.title).startsWith(norm(t.title)) && norm(x.artist).includes(norm(t.artist).split(' ')[0]);
+
+  // POOL/FLOOR 아래의 "0 …" 플레이리스트. 이름이 조금 달라도 찾도록 느슨하게 매칭
+  function findFloor0(nodes, path) {
+    for (const n of nodes) {
+      const p = path.concat(n.name);
+      if (!n.isFolder && /^0(\s|$)/.test(norm(n.name)) && path.some(x => norm(x) === 'floor')) return { node: n, path: p };
+      const r = findFloor0(n.children, n.isFolder ? p : path);
+      if (r) return r;
+    }
+    return null;
+  }
+
+  const floor0Item = SECTIONS[1].items.find(i => i.floor0);
+  let lastLib = null;
+  function fillFloor0(lib) {
+    const meta = t => {
+      if (!lib) return '';
+      const x = lib.tracks.find(x => sameTrack(t, x));
+      return x ? [x.bpm ? Math.round(x.bpm) + ' BPM' : '', x.key].filter(Boolean).join(' · ') : '';
+    };
+    $('floor0-first').innerHTML = FLOOR0_FIRST.map(t => trackHtml(floor0Item, t, meta(t))).join('');
+    const note = $('floor0-note'), rest = $('floor0-rest');
+    if (!lib) return;
+    const found = findFloor0(lib.playlists, []);
+    if (!found) {
+      rest.innerHTML = '';
+      note.innerHTML = '<span class="warn">export.pdb에 <code>FLOOR/0 추정</code> 플레이리스트가 없어. 레포의 pdb가 옛날 버전이면 오늘자 파일로 바꿔줘.</span>';
+      return;
+    }
+    const tracks = found.node.trackIds.map(id => lib.trackById.get(id)).filter(Boolean)
+      .filter(x => !FLOOR0_FIRST.some(t => sameTrack(t, x)))
+      .map(x => ({ title: x.title, artist: x.artist, meta: [x.bpm ? Math.round(x.bpm) + ' BPM' : '', x.key].filter(Boolean).join(' · ') }));
+    rest.innerHTML = tracks.map(t => trackHtml(floor0Item, t, t.meta)).join('');
+    note.textContent = `${found.path.join(' / ')} 에서 ${tracks.length}곡 불러왔어.`;
+  }
+
+  render();
+  fillFloor0(null);
+  sync();
+  Promise.all(['../export.pdb', '../exportExt.pdb'].map(u => fetch(u).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null)))
+    .then(([exp, ext]) => {
+      if (!exp) { $('floor0-note').innerHTML = '<span class="warn">export.pdb를 못 불러왔어.</span>'; return; }
+      try {
+        lastLib = RekordboxPdb.buildLibrary(RekordboxPdb.parseExport(exp), ext ? RekordboxPdb.parseExportExt(ext) : null);
+        fillFloor0(lastLib);
+      } catch (err) {
+        $('floor0-note').innerHTML = `<span class="warn">export.pdb 읽기 실패: ${esc(err.message)}</span>`;
+      }
+      sync();
+    });
+})();
+</script>
+</body>
+</html>
