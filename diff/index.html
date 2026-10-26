@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PC ↔ USB 대조</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#f3f4f2;--panel:#fff;--fg:#17191a;--mute:#646a6b;--line:#d9dcda;--acc:#0f6e6a;--warm:#b0623a;--gs:#8a7a2a;--hi:#e6f1ef;
+--f:"IBM Plex Sans KR",system-ui,sans-serif;--m:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--gs:#d6c26a;--hi:#1f2c2b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121414;--panel:#1b1e1e;--fg:#e7eae8;--mute:#9aa19f;--line:#2e3332;--acc:#5cc7bf;--warm:#e0946d;--gs:#d6c26a;--hi:#1f2c2b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 var(--f)}
+.w{max-width:1200px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--acc)}
+.back{font-size:12.5px;text-decoration:none}
+h1{font-size:24px;margin:6px 0 4px}
+.lead{color:var(--mute);margin:0;max-width:72ch}
+code{font-family:var(--m);font-size:12.5px;color:var(--acc)}
+.drop{margin-top:14px;background:var(--panel);border:1.5px dashed var(--line);border-radius:6px;padding:18px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.drop.over{border-color:var(--acc);background:var(--hi)}
+.drop label.btn{border:1px solid var(--acc);color:var(--acc);border-radius:4px;padding:5px 12px;cursor:pointer;font-weight:600}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop .lock{flex-basis:100%;font-size:12.5px;color:var(--mute)}
+.status{font-size:12.5px;color:var(--mute)}
+.err{color:var(--warm)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px;margin-top:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+.stat b{display:block;font-family:var(--m);font-size:20px;font-weight:500}
+.stat span{font-size:12px;color:var(--mute)}
+.stat.pc b{color:var(--warm)}.stat.both b{color:var(--acc)}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:20px;border-bottom:1px solid var(--line)}
+.tabs button{font:inherit;background:none;border:1px solid transparent;border-bottom:0;border-radius:6px 6px 0 0;padding:7px 14px;cursor:pointer;color:var(--mute);margin-bottom:-1px}
+.tabs button[aria-selected="true"]{background:var(--panel);border-color:var(--line);color:var(--fg);font-weight:600}
+.tabs button .n{font-family:var(--m);font-size:12px;margin-left:4px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:12px 0 8px;font-size:12.5px;color:var(--mute)}
+.bar label{display:flex;gap:5px;align-items:center;cursor:pointer}
+.bar select,.bar input[type=search]{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg)}
+.bar .sp{flex:1}
+.bar button{font:inherit;background:none;border:1px solid var(--line);color:var(--fg);border-radius:4px;padding:4px 10px;cursor:pointer}
+input[type=checkbox]{accent-color:var(--acc)}
+.tw{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 10px;text-align:left;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font-size:12px;color:var(--mute);font-weight:600;white-space:nowrap}
+td.t{font-weight:600;min-width:160px}
+td.mute{color:var(--mute)}
+td.num{font-family:var(--m);font-size:12px;text-align:right;white-space:nowrap}
+td.nw{white-space:nowrap}
+td.pl{font-size:12px;min-width:160px}
+td.pl div{white-space:nowrap}
+td.dir{font-size:12px;color:var(--mute);min-width:140px;overflow-wrap:anywhere}
+.badge{display:inline-block;font-size:11px;font-weight:400;border:1px solid var(--warm);color:var(--warm);border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:1px}
+.badge.m2{border-color:var(--gs);color:var(--gs)}
+.none{color:var(--mute);font-style:italic}
+.big{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px;text-align:center}
+.big b{display:block;font-family:var(--m);font-size:44px;font-weight:500;color:var(--acc);line-height:1.1}
+.big span{color:var(--mute);font-size:13px}
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--acc);font-size:13px}
+.empty{padding:20px;color:var(--mute);text-align:center}
+.note{font-size:12.5px;color:var(--mute);margin:8px 0 0}
+</style>
+</head>
+<body>
+<div class="w">
+<a class="back" href="../">← 홈으로</a>
+<h1>PC ↔ USB 대조</h1>
+<p class="lead">PC rekordbox 컬렉션(XML)과 USB의 <code>export.pdb</code>를 비교해서 한쪽에만 있는 곡을 찾아줘. XML은 rekordbox에서 <b>파일 → 내보내기 → 컬렉션을 xml 형식으로 내보내기</b>로 만들면 돼.</p>
+
+<div class="drop" id="drop">
+  <label class="btn" for="file">XML 파일 고르기</label>
+  <input type="file" id="file" accept=".xml,text/xml,application/xml">
+  <span>또는 여기로 끌어다 놓기</span>
+  <span class="status" id="status"></span>
+  <span class="lock">🔒 XML은 이 브라우저 안에서만 읽어. 어디에도 업로드하지 않아(레포가 public이라 올리지 마).</span>
+</div>
+<p class="note" id="usbStatus">USB export.pdb 불러오는 중…</p>
+
+<div id="result" hidden>
+  <div class="stats" id="stats"></div>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="pc" aria-selected="true">PC에만 있음<span class="n" id="nPc"></span></button>
+    <button type="button" role="tab" data-tab="usb" aria-selected="false">USB에만 있음<span class="n" id="nUsb"></span></button>
+    <button type="button" role="tab" data-tab="both" aria-selected="false">양쪽 다 있음<span class="n" id="nBoth"></span></button>
+  </div>
+
+  <div data-panel="pc" role="tabpanel">
+    <div class="bar">
+      <label><input type="checkbox" id="hideRef"> REF 숨기기</label>
+      <label><input type="checkbox" id="hideOld"> _OLD 숨기기</label>
+      <label><input type="checkbox" id="hideHyper"> 하이퍼 숨기기</label>
+      <label><input type="checkbox" id="noList"> 플레이리스트 없는 곡만</label>
+      <label>정렬 <select id="sortPc"><option value="date-desc">추가일 최신순</option><option value="date-asc">추가일 오래된순</option><option value="artist">아티스트</option></select></label>
+      <input type="search" id="qPc" placeholder="검색" aria-label="검색">
+      <span class="sp"></span>
+      <button type="button" data-csv="pc">CSV 다운로드</button>
+    </div>
+    <div id="viewPc"></div>
+    <p class="note">숨기기 필터는 플레이리스트 경로 중 하나라도 해당 이름(REF / _OLD / 하이퍼)이 들어가면 숨겨. CSV는 지금 보이는 목록 그대로 저장돼.</p>
+  </div>
+
+  <div data-panel="usb" role="tabpanel" hidden>
+    <div class="bar">
+      <label>정렬 <select id="sortUsb"><option value="date-desc">추가일 최신순</option><option value="date-asc">추가일 오래된순</option><option value="artist">아티스트</option></select></label>
+      <input type="search" id="qUsb" placeholder="검색" aria-label="검색">
+      <span class="sp"></span>
+      <button type="button" data-csv="usb">CSV 다운로드</button>
+    </div>
+    <div id="viewUsb"></div>
+    <p class="note">PC 컬렉션에서 빠진 곡이야. relocate가 안 됐거나 PC에서 지운 곡일 수 있어.</p>
+  </div>
+
+  <div data-panel="both" role="tabpanel" hidden>
+    <div class="big"><b id="bigBoth"></b><span id="bigBothSub"></span></div>
+    <details><summary>목록 펼치기</summary>
+      <div class="bar"><span class="sp"></span><button type="button" data-csv="both">CSV 다운로드</button></div>
+      <div id="viewBoth"></div>
+    </details>
+  </div>
+</div>
+</div>
+<script src="../rekordbox/pdb.js"></script>
+<script src="diff.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const D = RekordboxDiff;
+  const fmtBpm = b => b ? (Number.isInteger(b) ? String(b) : b.toFixed(2)) : '';
+  const lists = arr => arr.length ? arr.map(p => `<div>${esc(p)}</div>`).join('') : '<span class="none">없음</span>';
+
+  let usb = null, pc = null, res = null, pcName = '';
+
+  const seg = (g, re) => g.playlists.some(p => p.split('/').some(s => re.test(s.trim())));
+  const RE = { ref: /(^|[^a-z])ref([^a-z]|$)/i, old: /^_OLD/i, hyper: /하이퍼/ };
+
+  function sorted(list, how) {
+    const out = list.slice();
+    const art = (a, b) => String(a.artist).localeCompare(String(b.artist), 'ko') || String(a.title).localeCompare(String(b.title), 'ko');
+    if (how === 'artist') out.sort(art);
+    else out.sort((a, b) => (how === 'date-asc' ? 1 : -1) * String(a.dateAdded || '').localeCompare(String(b.dateAdded || '')) || art(a, b));
+    return out;
+  }
+  const match = (x, q) => !q || [x.artist, x.title, x.album, ...(x.playlists || []), ...(x.dirs || []), x.path].join(' ').toLowerCase().includes(q);
+
+  function pcRows() {
+    const q = $('qPc').value.trim().toLowerCase();
+    return sorted(res.pcOnly.filter(g =>
+      !($('hideRef').checked && seg(g, RE.ref)) &&
+      !($('hideOld').checked && seg(g, RE.old)) &&
+      !($('hideHyper').checked && seg(g, RE.hyper)) &&
+      !($('noList').checked && g.playlists.length) && match(g, q)), $('sortPc').value);
+  }
+  function usbRows() {
+    const q = $('qUsb').value.trim().toLowerCase();
+    return sorted(res.usbOnly.filter(u => match(u, q)), $('sortUsb').value);
+  }
+
+  function renderPc() {
+    const rows = pcRows();
+    $('viewPc').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th>아티스트</th><th>제목</th><th>PC 플레이리스트</th><th>추가일</th><th>BPM</th><th>형식</th><th>파일 폴더</th></tr></thead><tbody>` +
+      rows.map(g => `<tr><td class="mute">${esc(g.artist)}</td><td class="t">${esc(g.title)}${g.dup ? `<span class="badge" title="${esc(g.files.map(f => f.file).join('\n'))}">중복 ${g.files.length}</span>` : ''}</td>` +
+        `<td class="pl">${lists(g.playlists)}</td><td class="nw mute">${esc(g.dateAdded)}</td><td class="num">${fmtBpm(g.bpm)}</td>` +
+        `<td class="nw">${esc(g.formats.join(', '))}</td><td class="dir" title="${esc(g.files.map(f => f.path).join('\n'))}">${esc(g.dirs.join('\n')).replace(/\n/g, '<br>')}</td></tr>`).join('') +
+      '</tbody></table></div>' : '<div class="tw"><div class="empty">조건에 맞는 곡이 없어</div></div>';
+    $('nPc').textContent = rows.length === res.pcOnly.length ? res.pcOnly.length : `${rows.length}/${res.pcOnly.length}`;
+  }
+  function renderUsb() {
+    const rows = usbRows();
+    $('viewUsb').innerHTML = rows.length ? `<div class="tw"><table><thead><tr><th>아티스트</th><th>제목</th><th>USB 플레이리스트</th><th>추가일</th><th>BPM</th><th>형식</th><th>USB 경로</th></tr></thead><tbody>` +
+      rows.map(u => `<tr><td class="mute">${esc(u.artist)}</td><td class="t">${esc(u.title)}</td><td class="pl">${lists(u.playlists)}</td>` +
+        `<td class="nw mute">${esc(u.dateAdded)}</td><td class="num">${fmtBpm(u.bpm)}</td><td class="nw">${esc(u.format)}</td><td class="dir">${esc(u.path)}</td></tr>`).join('') +
+      '</tbody></table></div>' : '<div class="tw"><div class="empty">USB에만 있는 곡이 없어</div></div>';
+  }
+  function renderBoth() {
+    const s = res.stats;
+    $('bigBoth').textContent = res.both.length;
+    $('bigBothSub').textContent = `양쪽에 다 있는 곡 · 아티스트+제목 ${s.byKey} · 파일명 ${s.byFile}`;
+    const rows = sorted(res.both, 'artist');
+    $('viewBoth').innerHTML = `<div class="tw"><table><thead><tr><th>아티스트</th><th>제목</th><th>매칭</th><th>PC 형식</th><th>USB 경로</th></tr></thead><tbody>` +
+      rows.map(g => `<tr><td class="mute">${esc(g.artist)}</td><td class="t">${esc(g.title)}${g.dup ? `<span class="badge">중복 ${g.files.length}</span>` : ''}</td>` +
+        `<td class="nw">${g.match.method === 1 ? '아티스트+제목' : '<span class="badge m2" style="margin:0">파일명</span>'}</td>` +
+        `<td class="nw">${esc(g.formats.join(', '))}</td><td class="dir">${g.match.usb.map(u => esc(u.path)).join('<br>')}</td></tr>`).join('') +
+      '</tbody></table></div>';
+  }
+
+  function renderAll() {
+    const s = res.stats;
+    $('stats').innerHTML = [
+      ['', s.pcSongs, `PC 곡 (파일 ${s.pcFiles}${s.dupGroups ? ` · 중복 묶음 ${s.dupGroups}` : ''})`],
+      ['', s.usb, 'USB 곡'],
+      ['pc', res.pcOnly.length, 'PC에만 있음'],
+      ['', res.usbOnly.length, 'USB에만 있음'],
+      ['both', res.both.length, '양쪽 다 있음'],
+      ['', `${s.byKey} · ${s.byFile}`, '매칭: 아티스트+제목 · 파일명'],
+    ].map(([c, n, l]) => `<div class="stat ${c}"><b>${n}</b><span>${l}</span></div>`).join('');
+    $('nUsb').textContent = res.usbOnly.length;
+    $('nBoth').textContent = res.both.length;
+    renderPc(); renderUsb(); renderBoth();
+    $('result').hidden = false;
+  }
+
+  function run() {
+    if (!pc || !usb) return;
+    res = D.compare(pc.tracks, usb);
+    renderAll();
+  }
+
+  // ---- 입력 ----
+  function readXml(file) {
+    if (!file) return;
+    $('status').textContent = `${file.name} 읽는 중…`;
+    file.text().then(text => {
+      const doc = new DOMParser().parseFromString(text, 'application/xml');
+      pc = D.parseRekordboxXml(doc);
+      pcName = file.name;
+      $('status').textContent = `${file.name} · 곡 ${pc.tracks.length} · 플레이리스트 ${pc.playlistCount}`;
+      run();
+    }).catch(err => { $('status').innerHTML = `<span class="err">읽기 실패: ${esc(err.message)}</span>`; });
+  }
+  $('file').addEventListener('change', e => readXml(e.target.files[0]));
+  const drop = $('drop');
+  ['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => readXml(e.dataTransfer.files[0]));
+  // 페이지 다른 곳에 떨어뜨려도 브라우저가 파일을 열지 않게
+  window.addEventListener('dragover', e => e.preventDefault());
+  window.addEventListener('drop', e => { e.preventDefault(); if (!drop.contains(e.target)) readXml(e.dataTransfer.files[0]); });
+
+  fetch('../export.pdb').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+    .then(buf => {
+      usb = D.usbTracks(RekordboxPdb.buildLibrary(RekordboxPdb.parseExport(buf), null));
+      $('usbStatus').textContent = `USB: 레포의 export.pdb · 곡 ${usb.length}`;
+      run();
+    })
+    .catch(err => { $('usbStatus').innerHTML = `<span class="err">USB export.pdb를 못 불러왔어 (${esc(err.message)})</span>`; });
+
+  // ---- 탭·필터 ----
+  document.querySelector('.tabs').addEventListener('click', e => {
+    const b = e.target.closest('button[data-tab]');
+    if (!b) return;
+    document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    document.querySelectorAll('[data-panel]').forEach(p => { p.hidden = p.dataset.panel !== b.dataset.tab; });
+  });
+  ['hideRef', 'hideOld', 'hideHyper', 'noList', 'sortPc', 'qPc'].forEach(id => $(id).addEventListener('input', renderPc));
+  ['sortUsb', 'qUsb'].forEach(id => $(id).addEventListener('input', renderUsb));
+
+  // ---- CSV ----
+  const today = () => new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  function download(name, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    const a = Object.assign(document.createElement('a'), { href: url, download: name });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('button[data-csv]');
+    if (!b || !res) return;
+    const kind = b.dataset.csv;
+    if (kind === 'pc') download(`pc_only_${today()}.csv`, D.toCsv(
+      ['아티스트', '제목', 'PC 플레이리스트', '추가일', 'BPM', '형식', '파일 폴더', '중복', '파일 경로'],
+      pcRows().map(g => [g.artist, g.title, g.playlists.join(' / '), g.dateAdded, fmtBpm(g.bpm), g.formats.join(', '), g.dirs.join(' / '), g.dup ? g.files.length : '', g.files.map(f => f.path).join(' / ')])));
+    if (kind === 'usb') download(`usb_only_${today()}.csv`, D.toCsv(
+      ['아티스트', '제목', 'USB 플레이리스트', '추가일', 'BPM', '형식', 'USB 경로'],
+      usbRows().map(u => [u.artist, u.title, u.playlists.join(' / '), u.dateAdded, fmtBpm(u.bpm), u.format, u.path])));
+    if (kind === 'both') download(`both_${today()}.csv`, D.toCsv(
+      ['아티스트', '제목', '매칭', 'PC 형식', 'PC 파일 경로', 'USB 경로'],
+      sorted(res.both, 'artist').map(g => [g.artist, g.title, g.match.method === 1 ? '아티스트+제목' : '파일명', g.formats.join(', '), g.files.map(f => f.path).join(' / '), g.match.usb.map(u => u.path).join(' / ')])));
+  });
+})();
+</script>
+</body>
+</html>
