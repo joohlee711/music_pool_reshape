@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="rekordbox" Version="7.2.19" Company="AlphaTheta"/>
+  <COLLECTION Entries="8">
+    <TRACK TrackID="66950733" Name="House 1" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="523592" TotalTime="1" DiscNumber="0" TrackNumber="0"
+           Year="0" AverageBpm="123.00" DateAdded="2026-10-28" BitRate="2116"
+           SampleRate="44100" Comments="4-Floor / Breaks Kit (A-1)" PlayCount="0"
+           Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/House1.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="123.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="164233870" Name="House 2" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="516208" TotalTime="1" DiscNumber="0" TrackNumber="0"
+           Year="0" AverageBpm="125.00" DateAdded="2026-10-28" BitRate="2116"
+           SampleRate="44100" Comments="4-Floor / Breaks Kit (A-2)" PlayCount="0"
+           Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/House2.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="125.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="53944368" Name="Techno 1" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="474222" TotalTime="1" DiscNumber="0" TrackNumber="0"
+           Year="0" AverageBpm="136.00" DateAdded="2026-10-28" BitRate="2116"
+           SampleRate="44100" Comments="4-Floor / Breaks Kit (A-3)" PlayCount="0"
+           Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/Techno1.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="136.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="55430765" Name="Breaks 1" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="1954162" TotalTime="7" DiscNumber="0" TrackNumber="0"
+           Year="0" AverageBpm="130.00" DateAdded="2026-10-28" BitRate="2116"
+           SampleRate="44100" Comments="4-Floor / Breaks Kit (A-4)" PlayCount="0"
+           Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/Breaks1.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="130.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="126164859" Name="House 3" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="3628988" TotalTime="13" DiscNumber="0"
+           TrackNumber="0" Year="0" AverageBpm="140.00" DateAdded="2026-10-28"
+           BitRate="2116" SampleRate="44100" Comments="4-Floor / Breaks Kit (B-1)"
+           PlayCount="0" Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/House3.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="140.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="4958058" Name="House 4" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="3387068" TotalTime="12" DiscNumber="0"
+           TrackNumber="0" Year="0" AverageBpm="150.00" DateAdded="2026-10-28"
+           BitRate="2116" SampleRate="44100" Comments="4-Floor / Breaks Kit (B-2)"
+           PlayCount="0" Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/House4.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="150.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="239064055" Name="Breaks 2" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="3628990" TotalTime="13" DiscNumber="0"
+           TrackNumber="0" Year="0" AverageBpm="140.00" DateAdded="2026-10-28"
+           BitRate="2116" SampleRate="44100" Comments="4-Floor / Breaks Kit (B-3)"
+           PlayCount="0" Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/Breaks2.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="140.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+    <TRACK TrackID="215871950" Name="Breaks 3" Artist="rekordbox" Composer=""
+           Album="GROOVE CIRCUIT FACTORY SAMPLES" Grouping="" Genre="Loop Samples"
+           Kind="WAV File" Size="2099500" TotalTime="7" DiscNumber="0" TrackNumber="0"
+           Year="0" AverageBpm="121.00" DateAdded="2026-10-28" BitRate="2116"
+           SampleRate="44100" Comments="4-Floor / Breaks Kit (B-4)" PlayCount="0"
+           Rating="0" Location="file://localhost/C:/Users/LGCNS/Music/rekordbox/Sampler/GROOVE%20CIRCUIT/PRESET/4-Floor%20Breaks%20Kit/Breaks3.wav"
+           Remixer="" Tonality="" Label="" Mix="">
+      <TEMPO Inizio="0.000" Bpm="121.00" Metro="4/4" Battito="1"/>
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Type="0" Name="ROOT" Count="6">
+      <NODE Name="CUE Analysis Playlist" Type="1" KeyType="0" Entries="0"/>
+      <NODE Name="DIG" Type="0" Count="1">
+        <NODE Name="1026" Type="1" KeyType="0" Entries="25">
+          <TRACK Key="222562854"/>
+          <TRACK Key="88223636"/>
+          <TRACK Key="139884155"/>
+          <TRACK Key="142258266"/>
+          <TRACK Key="147056618"/>
+          <TRACK Key="51978831"/>
+          <TRACK Key="158337201"/>
+          <TRACK Key="157544442"/>
+          <TRACK Key="203398188"/>
+          <TRACK Key="123720063"/>
+          <TRACK Key="29787329"/>
+          <TRACK Key="213823047"/>
+          <TRACK Key="117758757"/>
+          <TRACK Key="120986406"/>
+          <TRACK Key="1512394"/>
+          <TRACK Key="245246241"/>
+          <TRACK Key="142119278"/>
+          <TRACK Key="99653798"/>
+          <TRACK Key="91564764"/>
+          <TRACK Key="36031013"/>
+          <TRACK Key="200852093"/>
+          <TRACK Key="260415632"/>
+          <TRACK Key="138378577"/>
+          <TRACK Key="125777440"/>
+          <TRACK Key="225760779"/>
+        </NODE>
+      </NODE>
+      <NODE Name="DROP" Type="0" Count="0"/>
+      <NODE Name="OOC" Type="0" Count="0"/>
+      <NODE Name="REF_클럽별" Type="0" Count="13">
+        <NODE Name="카사코로나+대중적" Type="1" KeyType="0" Entries="10">
+          <TRACK Key="102152253"/>
+          <TRACK Key="39916293"/>
+          <TRACK Key="154317557"/>
+          <TRACK Key="176013777"/>
+          <TRACK Key="264599857"/>
+          <TRACK Key="12294498"/>
+          <TRACK Key="241849293"/>
+          <TRACK Key="40006219"/>
+          <TRACK Key="178016660"/>
+          <TRACK Key="213764760"/>
+        </NODE>
+        <NODE Name="케익샵 scr" Type="1" KeyType="0" Entries="9">
+          <TRACK Key="50456266"/>
+          <TRACK Key="214863940"/>
+          <TRACK Key="110270511"/>
+          <TRACK Key="244878901"/>
+          <TRACK Key="138286837"/>
+          <TRACK Key="262551209"/>
+          <TRACK Key="98532033"/>
+          <TRACK Key="120303491"/>
+          <TRACK Key="265958630"/>
+        </NODE>
+        <NODE Name="하우스 +페이퍼+아가" Type="1" KeyType="0" Entries="12">
+          <TRACK Key="134566492"/>
+          <TRACK Key="187576755"/>
+          <TRACK Key="71936605"/>
+          <TRACK Key="5236447"/>
+          <TRACK Key="102138890"/>
+          <TRACK Key="179366511"/>
+          <TRACK Key="66852535"/>
+          <TRACK Key="48452646"/>
+          <TRACK Key="245531036"/>
+          <TRACK Key="265958630"/>
+          <TRACK Key="50175935"/>
+          <TRACK Key="264599857"/>
+        </NODE>
+        <NODE Name="헤르츠" Type="1" KeyType="0" Entries="13">
+          <TRACK Key="101730664"/>
+          <TRACK Key="198316696"/>
+          <TRACK Key="55037764"/>
+          <TRACK Key="97242760"/>
+          <TRACK Key="266829098"/>
+          <TRACK Key="32724075"/>
+          <TRACK Key="179366511"/>
+          <TRACK Key="217320918"/>
+          <TRACK Key="66852535"/>
+          <TRACK Key="190882544"/>
+          <TRACK Key="245531036"/>
+          <TRACK Key="35816965"/>
+          <TRACK Key="94463411"/>
+        </NODE>
+        <NODE Name="야피" Type="1" KeyType="0" Entries="14">
+          <TRACK Key="42451524"/>
+          <TRACK Key="180071540"/>
+          <TRACK Key="2580978"/>
+          <TRACK Key="163500832"/>
+          <TRACK Key="138321457"/>
+          <TRACK Key="85039293"/>
+          <TRACK Key="257407460"/>
+          <TRACK Key="67749786"/>
+          <TRACK Key="105610970"/>
+          <TRACK Key="39916293"/>
+          <TRACK Key="154317557"/>
+          <TRACK Key="264599857"/>
+          <TRACK Key="245531036"/>
+          <TRACK Key="94463411"/>
+        </NODE>
+        <NODE Name="텔러" Type="1" KeyType="0" Entries="11">
+          <TRACK Key="200490895"/>
+          <TRACK Key="264132408"/>
+          <TRACK Key="56808854"/>
+          <TRACK Key="156489805"/>
+          <TRACK Key="165487522"/>
+          <TRACK Key="187931430"/>
+          <TRACK Key="248161805"/>
+          <TRACK Key="217320918"/>
+          <TRACK Key="46130308"/>
+          <TRACK Key="194239677"/>
+          <TRACK Key="190882544"/>
+        </NODE>
+        <NODE Name="링" Type="1" KeyType="0" Entries="2">
+          <TRACK Key="46130308"/>
+          <TRACK Key="190882544"/>
+        </NODE>
+        <NODE Name="모데쉬+콘바" Type="1" KeyType="0" Entries="6">
+          <TRACK Key="215750276"/>
+          <TRACK Key="157776766"/>
+          <TRACK Key="1416573"/>
+          <TRACK Key="245531036"/>
+          <TRACK Key="94463411"/>
+          <TRACK Key="66123047"/>
+        </NODE>
+        <NODE Name="쉘터" Type="1" KeyType="0" Entries="10">
+          <TRACK Key="110270511"/>
+          <TRACK Key="214863940"/>
+          <TRACK Key="138286837"/>
+          <TRACK Key="262551209"/>
+          <TRACK Key="231965123"/>
+          <TRACK Key="13039283"/>
+          <TRACK Key="37116855"/>
+          <TRACK Key="266599239"/>
+          <TRACK Key="231985199"/>
+          <TRACK Key="145952109"/>
+        </NODE>
+        <NODE Name="파우스트" Type="1" KeyType="0" Entries="12">
+          <TRACK Key="195069543"/>
+          <TRACK Key="138286837"/>
+          <TRACK Key="40397977"/>
+          <TRACK Key="11493215"/>
+          <TRACK Key="252876425"/>
+          <TRACK Key="209803034"/>
+          <TRACK Key="16786365"/>
+          <TRACK Key="123912717"/>
+          <TRACK Key="37116855"/>
+          <TRACK Key="266599239"/>
+          <TRACK Key="231985199"/>
+          <TRACK Key="150215147"/>
+        </NODE>
+        <NODE Name="벳톤" Type="1" KeyType="0" Entries="21">
+          <TRACK Key="243934464"/>
+          <TRACK Key="103947456"/>
+          <TRACK Key="195069543"/>
+          <TRACK Key="40397977"/>
+          <TRACK Key="121927922"/>
+          <TRACK Key="11493215"/>
+          <TRACK Key="252876425"/>
+          <TRACK Key="209803034"/>
+          <TRACK Key="16786365"/>
+          <TRACK Key="754677"/>
+          <TRACK Key="98139691"/>
+          <TRACK Key="169726578"/>
+          <TRACK Key="230938971"/>
+          <TRACK Key="257415944"/>
+          <TRACK Key="102488783"/>
+          <TRACK Key="70078894"/>
+          <TRACK Key="259803753"/>
+          <TRACK Key="266599239"/>
+          <TRACK Key="37116855"/>
+          <TRACK Key="231985199"/>
+          <TRACK Key="150215147"/>
+        </NODE>
+        <NODE Name="볼로스트" Type="1" KeyType="0" Entries="18">
+          <TRACK Key="243934464"/>
+          <TRACK Key="40397977"/>
+          <TRACK Key="11493215"/>
+          <TRACK Key="179831819"/>
+          <TRACK Key="181749609"/>
+          <TRACK Key="40458275"/>
+          <TRACK Key="209803034"/>
+          <TRACK Key="16786365"/>
+          <TRACK Key="754677"/>
+          <TRACK Key="98139691"/>
+          <TRACK Key="169726578"/>
+          <TRACK Key="230938971"/>
+          <TRACK Key="257415944"/>
+          <TRACK Key="102488783"/>
+          <TRACK Key="70078894"/>
+          <TRACK Key="259803753"/>
+          <TRACK Key="118578177"/>
+          <TRACK Key="31311218"/>
+        </NODE>
+        <NODE Name="벌트" Type="1" KeyType="0" Entries="15">
+          <TRACK Key="243934464"/>
+          <TRACK Key="121927922"/>
+          <TRACK Key="11493215"/>
+          <TRACK Key="181749609"/>
+          <TRACK Key="40458275"/>
+          <TRACK Key="209803034"/>
+          <TRACK Key="16786365"/>
+          <TRACK Key="98139691"/>
+          <TRACK Key="169726578"/>
+          <TRACK Key="230938971"/>
+          <TRACK Key="257415944"/>
+          <TRACK Key="102488783"/>
+          <TRACK Key="70078894"/>
+          <TRACK Key="259803753"/>
+          <TRACK Key="118578177"/>
+        </NODE>
+      </NODE>
+      <NODE Name="_OLD 2610" Type="0" Count="6">
+        <NODE Name="무제 리스트" Type="1" KeyType="0" Entries="16">
+          <TRACK Key="152268138"/>
+          <TRACK Key="146615747"/>
+          <TRACK Key="187838021"/>
+          <TRACK Key="74987350"/>
+          <TRACK Key="213809997"/>
+          <TRACK Key="71340464"/>
+          <TRACK Key="127028947"/>
+          <TRACK Key="65468061"/>
+          <TRACK Key="188321195"/>
+          <TRACK Key="220398570"/>
+          <TRACK Key="37348229"/>
+          <TRACK Key="161693915"/>
+          <TRACK Key="131093407"/>
+          <TRACK Key="189793676"/>
+          <TRACK Key="221159599"/>
+          <TRACK Key="216194557"/>
+        </NODE>
+        <NODE Name="80-90 and exp" Type="1" KeyType="0" Entries="11">
+          <TRACK Key="56276884"/>
+          <TRACK Key="150692453"/>
+          <TRACK Key="226506531"/>
+          <TRACK Key="132541245"/>
+          <TRACK Key="85247490"/>
+          <TRACK Key="49086488"/>
+          <TRACK Key="59178629"/>
+          <TRACK Key="64806078"/>
+          <TRACK Key="52427488"/>
+          <TRACK Key="219411277"/>
+          <TRACK Key="128358888"/>
+        </NODE>
+        <NODE Name="20260412" Type="1" KeyType="0" Entries="16">
+          <TRACK Key="95966024"/>
+          <TRACK Key="158049085"/>
+          <TRACK Key="46940975"/>
+          <TRACK Key="3712368"/>
+          <TRACK Key="267797711"/>
+          <TRACK Key="131433325"/>
+          <TRACK Key="17943912"/>
+          <TRACK Key="154453148"/>
+          <TRACK Key="63795463"/>
+          <TRACK Key="261252168"/>
+          <TRACK Key="137725553"/>
+          <TRACK Key="254304994"/>
+          <TRACK Key="132619982"/>
+          <TRACK Key="137365451"/>
+          <TRACK Key="226297754"/>
+          <TRACK Key="211508875"/>
+        </NODE>
+        <NODE Name="20260419" Type="1" KeyType="0" Entries="21">
+          <TRACK Key="158049085"/>
+          <TRACK Key="189793676"/>
+          <TRACK Key="127028947"/>
+          <TRACK Key="71340464"/>
+          <TRACK Key="37348229"/>
+          <TRACK Key="216194557"/>
+          <TRACK Key="161693915"/>
+          <TRACK Key="131093407"/>
+          <TRACK Key="187838021"/>
+          <TRACK Key="188321195"/>
+          <TRACK Key="74987350"/>
+          <TRACK Key="220398570"/>
+          <TRACK Key="221159599"/>
+          <TRACK Key="17943912"/>
+          <TRACK Key="132619982"/>
+          <TRACK Key="261252168"/>
+          <TRACK Key="65468061"/>
+          <TRACK Key="213809997"/>
+          <TRACK Key="146615747"/>
+          <TRACK Key="226297754"/>
+          <TRACK Key="267797711"/>
+        </NODE>
+        <NODE Name="techno2026" Type="0" Count="10">
+          <NODE Name="무제 리스트" Type="1" KeyType="0" Entries="8">
+            <TRACK Key="195722295"/>
+            <TRACK Key="250861897"/>
+            <TRACK Key="179313685"/>
+            <TRACK Key="92417834"/>
+            <TRACK Key="129477236"/>
+            <TRACK Key="130729438"/>
+            <TRACK Key="36111890"/>
+            <TRACK Key="20309201"/>
+          </NODE>
+          <NODE Name="set 2026" Type="1" KeyType="0" Entries="21">
+            <TRACK Key="161465689"/>
+            <TRACK Key="240405953"/>
+            <TRACK Key="208103866"/>
+            <TRACK Key="79912776"/>
+            <TRACK Key="129477236"/>
+            <TRACK Key="74402970"/>
+            <TRACK Key="179313685"/>
+            <TRACK Key="1462632"/>
+            <TRACK Key="7804083"/>
+            <TRACK Key="42881980"/>
+            <TRACK Key="46165624"/>
+            <TRACK Key="130729438"/>
+            <TRACK Key="149856342"/>
+            <TRACK Key="34769752"/>
+            <TRACK Key="2860232"/>
+            <TRACK Key="37315432"/>
+            <TRACK Key="171476931"/>
+            <TRACK Key="19606626"/>
+            <TRACK Key="146615747"/>
+            <TRACK Key="143896121"/>
+            <TRACK Key="231985199"/>
+          </NODE>
+          <NODE Name="1" Type="1" KeyType="0" Entries="1">
+            <TRACK Key="161465689"/>
+          </NODE>
+          <NODE Name="1.5" Type="1" KeyType="0" Entries="1">
+            <TRACK Key="208103866"/>
+          </NODE>
+          <NODE Name="2" Type="1" KeyType="0" Entries="3">
+            <TRACK Key="240405953"/>
+            <TRACK Key="161069642"/>
+            <TRACK Key="246213367"/>
+          </NODE>
+          <NODE Name="3" Type="1" KeyType="0" Entries="7">
+            <TRACK Key="109369946"/>
+            <TRACK Key="74402970"/>
+            <TRACK Key="79912776"/>
+            <TRACK Key="126550735"/>
+            <TRACK Key="194761239"/>
+            <TRACK Key="36111890"/>
+            <TRACK Key="1462632"/>
+          </NODE>
+          <NODE Name="4" Type="1" KeyType="0" Entries="4">
+            <TRACK Key="211508875"/>
+            <TRACK Key="92417834"/>
+            <TRACK Key="139662141"/>
+            <TRACK Key="227524213"/>
+          </NODE>
+          <NODE Name="5" Type="1" KeyType="0" Entries="7">
+            <TRACK Key="2627204"/>
+            <TRACK Key="46165624"/>
+            <TRACK Key="7804083"/>
+            <TRACK Key="130729438"/>
+            <TRACK Key="242942741"/>
+            <TRACK Key="42881980"/>
+            <TRACK Key="69774139"/>
+          </NODE>
+          <NODE Name="6" Type="1" KeyType="0" Entries="5">
+            <TRACK Key="149856342"/>
+            <TRACK Key="171476931"/>
+            <TRACK Key="34769752"/>
+            <TRACK Key="2860232"/>
+            <TRACK Key="37315432"/>
+          </NODE>
+          <NODE Name="변형" Type="1" KeyType="0" Entries="7">
+            <TRACK Key="226297754"/>
+            <TRACK Key="19606626"/>
+            <TRACK Key="137365451"/>
+            <TRACK Key="143896121"/>
+            <TRACK Key="231985199"/>
+            <TRACK Key="146615747"/>
+            <TRACK Key="36111890"/>
+          </NODE>
+        </NODE>
+        <NODE Name="Libraries" Type="0" Count="8">
+          <NODE Name="분류2" Type="0" Count="9">
+            <NODE Name="살" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="75745983"/>
+              <TRACK Key="165001754"/>
+            </NODE>
+            <NODE Name="헛" Type="1" KeyType="0" Entries="3">
+              <TRACK Key="169731648"/>
+              <TRACK Key="171864242"/>
+              <TRACK Key="222467465"/>
+            </NODE>
+            <NODE Name="발" Type="1" KeyType="0" Entries="4">
+              <TRACK Key="36279888"/>
+              <TRACK Key="155645056"/>
+              <TRACK Key="3017697"/>
+              <TRACK Key="20260584"/>
+            </NODE>
+            <NODE Name="손발" Type="1" KeyType="0" Entries="6">
+              <TRACK Key="122096070"/>
+              <TRACK Key="210873051"/>
+              <TRACK Key="7813725"/>
+              <TRACK Key="4240661"/>
+              <TRACK Key="8382092"/>
+              <TRACK Key="2052487"/>
+            </NODE>
+            <NODE Name="직진" Type="1" KeyType="0" Entries="6">
+              <TRACK Key="238183807"/>
+              <TRACK Key="200750572"/>
+              <TRACK Key="254323319"/>
+              <TRACK Key="228348436"/>
+              <TRACK Key="169258248"/>
+              <TRACK Key="205171323"/>
+            </NODE>
+            <NODE Name="대직" Type="1" KeyType="0" Entries="3">
+              <TRACK Key="259243456"/>
+              <TRACK Key="98977212"/>
+              <TRACK Key="102135223"/>
+            </NODE>
+            <NODE Name="필살" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="244988532"/>
+              <TRACK Key="71910256"/>
+            </NODE>
+            <NODE Name="엔딩" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="72681916"/>
+              <TRACK Key="232834780"/>
+            </NODE>
+            <NODE Name="변칙" Type="1" KeyType="0" Entries="1">
+              <TRACK Key="169258248"/>
+            </NODE>
+          </NODE>
+          <NODE Name="디스코적인하우스" Type="1" KeyType="0" Entries="9">
+            <TRACK Key="27318614"/>
+            <TRACK Key="105642474"/>
+            <TRACK Key="201555447"/>
+            <TRACK Key="102424872"/>
+            <TRACK Key="191406846"/>
+            <TRACK Key="75719199"/>
+            <TRACK Key="125697121"/>
+            <TRACK Key="175703043"/>
+            <TRACK Key="153526101"/>
+          </NODE>
+          <NODE Name="테크노들 (파우스트색)" Type="1" KeyType="0" Entries="7">
+            <TRACK Key="143896121"/>
+            <TRACK Key="208103866"/>
+            <TRACK Key="149856342"/>
+            <TRACK Key="202696525"/>
+            <TRACK Key="209570242"/>
+            <TRACK Key="1913159"/>
+            <TRACK Key="83556114"/>
+          </NODE>
+          <NODE Name="250081" Type="0" Count="9">
+            <NODE Name="살랑" Type="1" KeyType="0" Entries="0"/>
+            <NODE Name="헛둘" Type="1" KeyType="0" Entries="1">
+              <TRACK Key="35816965"/>
+            </NODE>
+            <NODE Name="발" Type="1" KeyType="0" Entries="1">
+              <TRACK Key="264132408"/>
+            </NODE>
+            <NODE Name="손발" Type="1" KeyType="0" Entries="3">
+              <TRACK Key="266829098"/>
+              <TRACK Key="187576755"/>
+              <TRACK Key="206434877"/>
+            </NODE>
+            <NODE Name="직진" Type="1" KeyType="0" Entries="6">
+              <TRACK Key="125697121"/>
+              <TRACK Key="66852535"/>
+              <TRACK Key="175703043"/>
+              <TRACK Key="179366511"/>
+              <TRACK Key="238183807"/>
+              <TRACK Key="55037764"/>
+            </NODE>
+            <NODE Name="대직진" Type="1" KeyType="0" Entries="3">
+              <TRACK Key="240530355"/>
+              <TRACK Key="102138890"/>
+              <TRACK Key="40006219"/>
+            </NODE>
+            <NODE Name="필살기" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="94463411"/>
+              <TRACK Key="153526101"/>
+            </NODE>
+            <NODE Name="엔딩" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="48452646"/>
+              <TRACK Key="42451524"/>
+            </NODE>
+            <NODE Name="변칙" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="50175935"/>
+              <TRACK Key="176013777"/>
+            </NODE>
+          </NODE>
+          <NODE Name="Temp" Type="1" KeyType="0" Entries="84">
+            <TRACK Key="110355093"/>
+            <TRACK Key="67433099"/>
+            <TRACK Key="23212739"/>
+            <TRACK Key="125317196"/>
+            <TRACK Key="28955962"/>
+            <TRACK Key="86841213"/>
+            <TRACK Key="77345290"/>
+            <TRACK Key="156819224"/>
+            <TRACK Key="64689705"/>
+            <TRACK Key="145993624"/>
+            <TRACK Key="254843279"/>
+            <TRACK Key="184016840"/>
+            <TRACK Key="151423153"/>
+            <TRACK Key="62308294"/>
+            <TRACK Key="195570290"/>
+            <TRACK Key="191542290"/>
+            <TRACK Key="208407571"/>
+            <TRACK Key="96152140"/>
+            <TRACK Key="172998045"/>
+            <TRACK Key="258064188"/>
+            <TRACK Key="220483944"/>
+            <TRACK Key="150086832"/>
+            <TRACK Key="100802161"/>
+            <TRACK Key="260321800"/>
+            <TRACK Key="175031510"/>
+            <TRACK Key="80122698"/>
+            <TRACK Key="25530486"/>
+            <TRACK Key="133018784"/>
+            <TRACK Key="199006137"/>
+            <TRACK Key="90864837"/>
+            <TRACK Key="101379483"/>
+            <TRACK Key="175227869"/>
+            <TRACK Key="120271007"/>
+            <TRACK Key="207911680"/>
+            <TRACK Key="31061052"/>
+            <TRACK Key="87796336"/>
+            <TRACK Key="153526101"/>
+            <TRACK Key="83556114"/>
+            <TRACK Key="125697121"/>
+            <TRACK Key="240530355"/>
+            <TRACK Key="238183807"/>
+            <TRACK Key="259243456"/>
+            <TRACK Key="1913159"/>
+            <TRACK Key="98977212"/>
+            <TRACK Key="102135223"/>
+            <TRACK Key="75719199"/>
+            <TRACK Key="210873051"/>
+            <TRACK Key="206434877"/>
+            <TRACK Key="2052487"/>
+            <TRACK Key="205171323"/>
+            <TRACK Key="228348436"/>
+            <TRACK Key="175703043"/>
+            <TRACK Key="27318614"/>
+            <TRACK Key="169258248"/>
+            <TRACK Key="191406846"/>
+            <TRACK Key="75745983"/>
+            <TRACK Key="171864242"/>
+            <TRACK Key="232834780"/>
+            <TRACK Key="254323319"/>
+            <TRACK Key="169731648"/>
+            <TRACK Key="132178375"/>
+            <TRACK Key="18811070"/>
+            <TRACK Key="155645056"/>
+            <TRACK Key="3017697"/>
+            <TRACK Key="209570242"/>
+            <TRACK Key="202696525"/>
+            <TRACK Key="165001754"/>
+            <TRACK Key="71910256"/>
+            <TRACK Key="122096070"/>
+            <TRACK Key="8382092"/>
+            <TRACK Key="200750572"/>
+            <TRACK Key="7813725"/>
+            <TRACK Key="4240661"/>
+            <TRACK Key="149856342"/>
+            <TRACK Key="105642474"/>
+            <TRACK Key="208103866"/>
+            <TRACK Key="72681916"/>
+            <TRACK Key="36279888"/>
+            <TRACK Key="244988532"/>
+            <TRACK Key="20260584"/>
+            <TRACK Key="102424872"/>
+            <TRACK Key="143896121"/>
+            <TRACK Key="222467465"/>
+            <TRACK Key="201555447"/>
+          </NODE>
+          <NODE Name="무제 리스트" Type="1" KeyType="0" Entries="32">
+            <TRACK Key="201555447"/>
+            <TRACK Key="20260584"/>
+            <TRACK Key="72681916"/>
+            <TRACK Key="75745983"/>
+            <TRACK Key="155645056"/>
+            <TRACK Key="132178375"/>
+            <TRACK Key="122096070"/>
+            <TRACK Key="7813725"/>
+            <TRACK Key="27318614"/>
+            <TRACK Key="169258248"/>
+            <TRACK Key="191406846"/>
+            <TRACK Key="171864242"/>
+            <TRACK Key="232834780"/>
+            <TRACK Key="254323319"/>
+            <TRACK Key="169731648"/>
+            <TRACK Key="18811070"/>
+            <TRACK Key="3017697"/>
+            <TRACK Key="209570242"/>
+            <TRACK Key="202696525"/>
+            <TRACK Key="165001754"/>
+            <TRACK Key="71910256"/>
+            <TRACK Key="8382092"/>
+            <TRACK Key="200750572"/>
+            <TRACK Key="4240661"/>
+            <TRACK Key="149856342"/>
+            <TRACK Key="105642474"/>
+            <TRACK Key="208103866"/>
+            <TRACK Key="36279888"/>
+            <TRACK Key="244988532"/>
+            <TRACK Key="102424872"/>
+            <TRACK Key="143896121"/>
+            <TRACK Key="222467465"/>
+          </NODE>
+          <NODE Name="댄스분류법(베이스+춤사위)" Type="0" Count="9">
+            <NODE Name="살랑살랑" Type="1" KeyType="0" Entries="1">
+              <TRACK Key="264599857"/>
+            </NODE>
+            <NODE Name="헛둘헛둘(춤추기싫은데 흔들리거)" Type="1"
+                  KeyType="0" Entries="2">
+              <TRACK Key="245531036"/>
+              <TRACK Key="35816965"/>
+            </NODE>
+            <NODE Name="발로만댄스(자의적)" Type="1" KeyType="0" Entries="1">
+              <TRACK Key="266829098"/>
+            </NODE>
+            <NODE Name="손발댄스(뭔가 일어날것같음)" Type="1" KeyType="0"
+                  Entries="3">
+              <TRACK Key="48452646"/>
+              <TRACK Key="50175935"/>
+              <TRACK Key="101730664"/>
+            </NODE>
+            <NODE Name="직진(본격댄스)" Type="1" KeyType="0" Entries="6">
+              <TRACK Key="71936605"/>
+              <TRACK Key="187576755"/>
+              <TRACK Key="55037764"/>
+              <TRACK Key="32724075"/>
+              <TRACK Key="94463411"/>
+              <TRACK Key="217320918"/>
+            </NODE>
+            <NODE Name="대직진" Type="1" KeyType="0" Entries="6">
+              <TRACK Key="5236447"/>
+              <TRACK Key="102138890"/>
+              <TRACK Key="265958630"/>
+              <TRACK Key="198316696"/>
+              <TRACK Key="97242760"/>
+              <TRACK Key="66852535"/>
+            </NODE>
+            <NODE Name="필살기(장르적구분하기 어려운트랙, 개성)"
+                  Type="1" KeyType="0" Entries="1">
+              <TRACK Key="179366511"/>
+            </NODE>
+            <NODE Name="엔딩무드 (감정폭발)" Type="1" KeyType="0" Entries="1">
+              <TRACK Key="190882544"/>
+            </NODE>
+            <NODE Name="변칙비트" Type="1" KeyType="0" Entries="2">
+              <TRACK Key="134566492"/>
+              <TRACK Key="190882544"/>
+            </NODE>
+          </NODE>
+          <NODE Name="CUE Analysis Playlist" Type="1" KeyType="0" Entries="0"/>
+        </NODE>
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>
