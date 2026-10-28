@@ -67,7 +67,7 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
 <div class="w">
 <a class="back" href="../">← 홈으로</a>
 <h1>PC ↔ USB 대조</h1>
-<p class="lead">PC rekordbox 컬렉션(XML)과 USB의 <code>export.pdb</code>를 비교해서 한쪽에만 있는 곡을 찾아줘. XML은 rekordbox에서 <b>파일 → 내보내기 → 컬렉션을 xml 형식으로 내보내기</b>로 만들어서 레포 <code>recordbox_xml/YYYYMMDD.xml</code>로 올리면 돼. USB는 <code>usb_pdb/YYYYMMDD/</code>. 둘 다 가장 최근 날짜 걸 자동으로 읽어.</p>
+<p class="lead">PC rekordbox 컬렉션(XML)과 USB의 <code>export.pdb</code>를 비교해서 한쪽에만 있는 곡을 찾아줘. XML은 rekordbox에서 <b>파일 → 내보내기 → 컬렉션을 xml 형식으로 내보내기</b>로 만들어서 레포 <code>rekordbox_xml/YYYYMMDD.xml</code>로 올리면 돼. USB는 <code>usb_pdb/YYYYMMDD/</code>. 둘 다 가장 최근 날짜 걸 자동으로 읽어.</p>
 
 <div class="drop" id="drop">
   <button type="button" class="btn" id="refresh">↻ 새로고침</button>
@@ -245,7 +245,7 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => { e.preventDefault(); if (!drop.contains(e.target)) readXml(e.dataTransfer.files[0]); });
 
-  // 레포의 최신 usb_pdb/YYYYMMDD/ 와 recordbox_xml/YYYYMMDD.xml. 새로고침은 캐시를 건너뜀
+  // 레포의 최신 usb_pdb/YYYYMMDD/ 와 rekordbox_xml/YYYYMMDD.xml. 새로고침은 캐시를 건너뜀
   function loadLatest(fresh) {
     $('usbStatus').textContent = '최신 파일 찾는 중…';
     LatestData.load({ pdb: true, xml: true }, fresh).then(res => {
@@ -256,7 +256,7 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
         catch (err) { $('usbStatus').innerHTML = `<span class="err">USB export.pdb 읽기 실패 (${esc(err.message)})</span>`; return; }
       }
       $('usbStatus').innerHTML = `레포: ${esc(d.text)}${usb ? ` · USB 곡 ${usb.length}` : ''}${d.warn ? ` <span class="err">${esc(d.warn)}</span>` : ''}`;
-      if (res.xml) useXml(res.xml, `recordbox_xml/${res.dates.xml}.xml`);
+      if (res.xml) useXml(res.xml, `rekordbox_xml/${res.dates.xml}.xml`);
       else $('status').textContent = '레포에 XML이 없어. 직접 열어줘.';
     }).catch(err => { $('usbStatus').innerHTML = `<span class="err">최신 파일을 못 불러왔어 (${esc(err.message)})</span>`; });
   }
