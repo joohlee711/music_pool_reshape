@@ -54,10 +54,11 @@ ul.tracks input:checked~span{opacity:.4;text-decoration:line-through}
 <a class="back" href="../">← 홈으로</a>
 <h1>싱크 체크리스트</h1>
 <p class="lead">Apple Music에서 정한 걸 USB에 맞추는 할 일 목록이야. 체크랑 선택 버튼 상태는 이 브라우저에 저장돼(폰이랑 맥북은 따로 저장돼).</p>
-<div class="bar"><span id="total"></span><button type="button" id="reset">체크·선택 모두 지우기</button></div>
+<div class="bar"><span id="total"></span><button type="button" id="reset">체크·선택 모두 지우기</button><span id="data"></span><button type="button" id="refresh">↻ 새로고침</button></div>
 <div id="out"></div>
 </div>
 <script src="../rekordbox/pdb.js"></script>
+<script src="../lib/latest.js"></script>
 <script>
 (function () {
   'use strict';
@@ -222,7 +223,7 @@ ul.tracks input:checked~span{opacity:.4;text-decoration:line-through}
     const found = findFloor0(lib.playlists, []);
     if (!found) {
       rest.innerHTML = '';
-      note.innerHTML = '<span class="warn">export.pdb에 <code>FLOOR/0 추정</code> 플레이리스트가 없어. 레포의 pdb가 옛날 버전이면 오늘자 파일로 바꿔줘.</span>';
+      note.innerHTML = '<span class="warn">export.pdb에 <code>FLOOR/0 추정</code> 플레이리스트가 없어. 레포 <code>usb_pdb/</code>의 최신 pdb가 옛날 버전이면 오늘자 폴더를 올려줘.</span>';
       return;
     }
     const tracks = found.node.trackIds.map(id => lib.trackById.get(id)).filter(Boolean)
@@ -235,9 +236,14 @@ ul.tracks input:checked~span{opacity:.4;text-decoration:line-through}
   render();
   fillFloor0(null);
   sync();
-  Promise.all(['../export.pdb', '../exportExt.pdb'].map(u => fetch(u).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null)))
-    .then(([exp, ext]) => {
-      if (!exp) { $('floor0-note').innerHTML = '<span class="warn">export.pdb를 못 불러왔어.</span>'; return; }
+  // 레포 usb_pdb/의 최신 날짜 폴더에서 읽음. 새로고침은 캐시를 건너뜀
+  function loadLatest(fresh) {
+    $('floor0-note').textContent = '최신 export.pdb 찾는 중…';
+    LatestData.load({ pdb: true, ext: true }, fresh).then(res => {
+      const exp = res.pdb, ext = res.ext;
+      const d = LatestData.describe(res, { pdb: true });
+      $('data').innerHTML = esc(d.text) + (d.warn ? ` <span class="warn">${esc(d.warn)}</span>` : '');
+      if (!exp) { $('floor0-note').innerHTML = '<span class="warn">레포 <code>usb_pdb/</code>에서 export.pdb를 못 찾았어.</span>'; return; }
       try {
         lastLib = RekordboxPdb.buildLibrary(RekordboxPdb.parseExport(exp), ext ? RekordboxPdb.parseExportExt(ext) : null);
         fillFloor0(lastLib);
@@ -246,6 +252,9 @@ ul.tracks input:checked~span{opacity:.4;text-decoration:line-through}
       }
       sync();
     });
+  }
+  $('refresh').addEventListener('click', () => loadLatest(true));
+  loadLatest(false);
 })();
 </script>
 </body>

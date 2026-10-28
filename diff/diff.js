@@ -56,7 +56,7 @@
     }
 
     // PLAYLISTS > NODE 트리. Type 0 = 폴더, 1 = 플레이리스트. KeyType 0 = TrackID, 1 = Location
-    let playlistCount = 0;
+    let playlistCount = 0, refTotal = 0, refMissing = 0;
     const pls = [...rootEl.children].find(e => e.nodeName === 'PLAYLISTS');
     (function walk(node, path) {
       for (const n of node.children) {
@@ -72,13 +72,16 @@
             if (e.nodeName !== 'TRACK') continue;
             const k = e.getAttribute('Key');
             const t = byLocation ? byLoc.get(k) : byId.get(k);
+            refTotal++;
+            if (!t) refMissing++;
             if (t && !t.playlists.includes(label)) t.playlists.push(label);
           }
         } else walk(n, p);
       }
     })(pls || { children: [] }, []);
 
-    return { tracks, playlistCount };
+    // refMissing: 플레이리스트에는 있는데 COLLECTION에 없는 곡 수. 많으면 XML이 덜 내보내진 것
+    return { tracks, playlistCount, refTotal, refMissing };
   }
 
   // USB 라이브러리(RekordboxPdb.buildLibrary 결과) → 대조용 곡 목록
