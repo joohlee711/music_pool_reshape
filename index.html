@@ -31,12 +31,22 @@ a.card:hover{border-color:var(--acc)}
 a.card b{display:block;color:var(--acc);font-size:15px}
 a.card span{color:var(--mute);font-size:13px}
 a.card.main{border-color:var(--acc)}
+a.hero{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-top:18px;text-decoration:none;color:var(--fg);background:var(--panel);border:1px solid var(--warm);border-radius:6px;padding:14px 16px}
+a.hero:hover{background:var(--bg)}
+a.hero b{font-family:var(--m);font-size:34px;font-weight:500;color:var(--warm);line-height:1}
+a.hero .l{font-weight:600;font-size:15px}
+a.hero .s{flex-basis:100%;color:var(--mute);font-size:12.5px}
+.hero-bar{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-top:6px;font-size:12.5px;color:var(--mute)}
+.hero-bar button{font:inherit;background:none;border:1px solid var(--line);color:var(--fg);border-radius:4px;padding:3px 10px;cursor:pointer}
+.warn{color:var(--warm)}
 </style>
 </head>
 <body>
 <div class="w">
-<h1>음악 정리 · phase 2</h1>
-<p class="lead">phase 1(USB·PC 대청소)은 끝났고, 지금은 Apple Music과 USB를 계속 맞춰가는 운영 단계야.</p>
+<h1>음악 정리 · phase 3</h1>
+<p class="lead">노트북 라이브러리(XML)와 USB(pdb)를 날짜별로 레포에 쌓아두고, 라이브러리엔 있는데 USB엔 없는 곡을 계속 확인하는 단계야. 운영 원칙은 phase 2 그대로야.</p>
+<a class="hero" href="diff/" id="hero"><b id="heroN">…</b><span class="l">라이브러리엔 있고 USB엔 없는 곡</span><span class="s" id="heroS">최신 XML·pdb 불러오는 중…</span></a>
+<div class="hero-bar"><span id="heroWarn" class="warn"></span><button type="button" id="refresh">↻ 새로고침</button></div>
 
 <h2>바로가기</h2>
 <div class="grid">
@@ -44,6 +54,13 @@ a.card.main{border-color:var(--acc)}
   <a class="card" href="rekordbox/"><b>rekordbox 정보 보기 →</b><span>USB의 export.pdb를 읽어서 곡·플레이리스트를 보여줘</span></a>
   <a class="card" href="diff/"><b>PC ↔ USB 대조 →</b><span>PC rekordbox XML과 USB를 비교해서 한쪽에만 있는 곡을 찾아줘</span></a>
 </div>
+
+<h2>데이터 올리는 법</h2>
+<div class="box"><ul class="rules">
+  <li>USB: <code>usb_pdb/YYYYMMDD/</code> 폴더를 만들어서 USB의 <code>PIONEER/rekordbox/export.pdb</code>, <code>exportExt.pdb</code>를 복사</li>
+  <li>노트북 라이브러리: rekordbox <b>파일 → 내보내기 → 컬렉션을 xml 형식으로 내보내기</b> → <code>rekordbox_xml/YYYYMMDD.xml</code></li>
+  <li>푸시하면 모든 페이지가 가장 최근 날짜 걸 자동으로 읽어. 방금 올렸는데 안 바뀌면 ↻ 새로고침</li>
+</ul></div>
 
 <h2>역할</h2>
 <div class="grid">
@@ -78,5 +95,36 @@ ARCHIVE/</pre>
   <a class="card" href="pc/"><b>PC 정리 체크리스트 →</b><span>PC에만 있던 212곡 분류</span></a>
 </div>
 </div>
+<script src="rekordbox/pdb.js"></script>
+<script src="diff/diff.js"></script>
+<script src="lib/latest.js"></script>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  function load(fresh) {
+    $('heroN').textContent = '…';
+    $('heroS').textContent = '최신 XML·pdb 불러오는 중…';
+    $('heroWarn').textContent = '';
+    LatestData.load({ pdb: true, xml: true }, fresh).then(res => {
+      const d = LatestData.describe(res, { pdb: true, xml: true });
+      if (!res.pdb || !res.xml) { $('heroN').textContent = '?'; $('heroS').textContent = d.text + ' — 둘 다 있어야 비교할 수 있어'; return; }
+      const D = RekordboxDiff;
+      const pc = D.parseRekordboxXml(new DOMParser().parseFromString(res.xml, 'application/xml'));
+      const usb = D.usbTracks(RekordboxPdb.buildLibrary(RekordboxPdb.parseExport(res.pdb), null));
+      const r = D.compare(pc.tracks, usb);
+      const incomplete = pc.refMissing && pc.refMissing >= Math.max(5, pc.refTotal * 0.1);
+      $('heroN').textContent = incomplete ? '?' : r.pcOnly.length;
+      $('heroS').textContent = `${d.text} · 라이브러리 ${r.stats.pcSongs}곡 · USB ${r.stats.usb}곡 · 누르면 목록으로`;
+      const warns = [];
+      if (incomplete) warns.push(`⚠ XML이 덜 내보내져서 셀 수 없어 (플레이리스트 항목 ${pc.refTotal}개 중 ${pc.refMissing}개가 컬렉션에 없음). 음악 파일이 있는 노트북에서 다시 내보내줘.`);
+      if (d.warn) warns.push(d.warn);
+      $('heroWarn').textContent = warns.join(' ');
+    }).catch(err => { $('heroN').textContent = '?'; $('heroS').textContent = '불러오기 실패: ' + err.message; });
+  }
+  $('refresh').addEventListener('click', () => load(true));
+  load(false);
+})();
+</script>
 </body>
 </html>

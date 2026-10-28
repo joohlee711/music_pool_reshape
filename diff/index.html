@@ -20,7 +20,7 @@ h1{font-size:24px;margin:6px 0 4px}
 code{font-family:var(--m);font-size:12.5px;color:var(--acc)}
 .drop{margin-top:14px;background:var(--panel);border:1.5px dashed var(--line);border-radius:6px;padding:18px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
 .drop.over{border-color:var(--acc);background:var(--hi)}
-.drop label.btn{border:1px solid var(--acc);color:var(--acc);border-radius:4px;padding:5px 12px;cursor:pointer;font-weight:600}
+.drop .btn{font:inherit;background:none;border:1px solid var(--acc);color:var(--acc);border-radius:4px;padding:5px 12px;cursor:pointer;font-weight:600}
 .drop input{position:absolute;width:1px;height:1px;opacity:0}
 .drop .lock{flex-basis:100%;font-size:12.5px;color:var(--mute)}
 .status{font-size:12.5px;color:var(--mute)}
@@ -67,16 +67,18 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
 <div class="w">
 <a class="back" href="../">← 홈으로</a>
 <h1>PC ↔ USB 대조</h1>
-<p class="lead">PC rekordbox 컬렉션(XML)과 USB의 <code>export.pdb</code>를 비교해서 한쪽에만 있는 곡을 찾아줘. XML은 rekordbox에서 <b>파일 → 내보내기 → 컬렉션을 xml 형식으로 내보내기</b>로 만들면 돼.</p>
+<p class="lead">PC rekordbox 컬렉션(XML)과 USB의 <code>export.pdb</code>를 비교해서 한쪽에만 있는 곡을 찾아줘. XML은 rekordbox에서 <b>파일 → 내보내기 → 컬렉션을 xml 형식으로 내보내기</b>로 만들어서 레포 <code>rekordbox_xml/YYYYMMDD.xml</code>로 올리면 돼. USB는 <code>usb_pdb/YYYYMMDD/</code>. 둘 다 가장 최근 날짜 걸 자동으로 읽어.</p>
 
 <div class="drop" id="drop">
-  <label class="btn" for="file">XML 파일 고르기</label>
+  <button type="button" class="btn" id="refresh">↻ 새로고침</button>
+  <label class="btn" for="file">다른 XML 열기</label>
   <input type="file" id="file" accept=".xml,text/xml,application/xml">
   <span>또는 여기로 끌어다 놓기</span>
   <span class="status" id="status"></span>
-  <span class="lock">🔒 XML은 이 브라우저 안에서만 읽어. 어디에도 업로드하지 않아(레포가 public이라 올리지 마).</span>
+  <span class="lock">직접 연 XML은 이 브라우저 안에서만 읽고 어디에도 업로드하지 않아. 새로고침하면 다시 레포 최신본으로 돌아가.</span>
 </div>
-<p class="note" id="usbStatus">USB export.pdb 불러오는 중…</p>
+<p class="note" id="usbStatus">최신 파일 찾는 중…</p>
+<p class="note err" id="xmlWarn" hidden></p>
 
 <div id="result" hidden>
   <div class="stats" id="stats"></div>
@@ -123,6 +125,7 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
 </div>
 <script src="../rekordbox/pdb.js"></script>
 <script src="diff.js"></script>
+<script src="../lib/latest.js"></script>
 <script>
 (function () {
   'use strict';
@@ -210,16 +213,28 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
   }
 
   // ---- 입력 ----
+  function useXml(text, name) {
+    try {
+      pc = D.parseRekordboxXml(new DOMParser().parseFromString(text, 'application/xml'));
+    } catch (err) {
+      pc = null; $('result').hidden = true;
+      $('status').innerHTML = `<span class="err">${esc(name)} 읽기 실패: ${esc(err.message)}</span>`;
+      return;
+    }
+    pcName = name;
+    $('status').textContent = `${name} · 곡 ${pc.tracks.length} · 플레이리스트 ${pc.playlistCount}`;
+    // 플레이리스트가 가리키는 곡이 COLLECTION에 많이 빠져 있으면 덜 내보내진 XML
+    const w = $('xmlWarn');
+    w.hidden = !(pc.refMissing && pc.refMissing >= Math.max(5, pc.refTotal * 0.1));
+    w.textContent = w.hidden ? '' : `⚠ 이 XML은 덜 내보내진 것 같아: 플레이리스트 항목 ${pc.refTotal}개 중 ${pc.refMissing}개가 가리키는 곡이 컬렉션(COLLECTION)에 없어. 그래서 아래 결과는 믿으면 안 돼. ` +
+      '파일이 이 컴퓨터에 없는 곡은 rekordbox가 XML 컬렉션에서 빼는 것 같아. 음악 파일이 있는 노트북에서 다시 내보내줘.';
+    run();
+  }
   function readXml(file) {
     if (!file) return;
     $('status').textContent = `${file.name} 읽는 중…`;
-    file.text().then(text => {
-      const doc = new DOMParser().parseFromString(text, 'application/xml');
-      pc = D.parseRekordboxXml(doc);
-      pcName = file.name;
-      $('status').textContent = `${file.name} · 곡 ${pc.tracks.length} · 플레이리스트 ${pc.playlistCount}`;
-      run();
-    }).catch(err => { $('status').innerHTML = `<span class="err">읽기 실패: ${esc(err.message)}</span>`; });
+    file.text().then(text => useXml(text, file.name + ' (직접 연 파일)'))
+      .catch(err => { $('status').innerHTML = `<span class="err">읽기 실패: ${esc(err.message)}</span>`; });
   }
   $('file').addEventListener('change', e => readXml(e.target.files[0]));
   const drop = $('drop');
@@ -230,13 +245,23 @@ summary{cursor:pointer;color:var(--acc);font-size:13px}
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => { e.preventDefault(); if (!drop.contains(e.target)) readXml(e.dataTransfer.files[0]); });
 
-  fetch('../export.pdb').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
-    .then(buf => {
-      usb = D.usbTracks(RekordboxPdb.buildLibrary(RekordboxPdb.parseExport(buf), null));
-      $('usbStatus').textContent = `USB: 레포의 export.pdb · 곡 ${usb.length}`;
-      run();
-    })
-    .catch(err => { $('usbStatus').innerHTML = `<span class="err">USB export.pdb를 못 불러왔어 (${esc(err.message)})</span>`; });
+  // 레포의 최신 usb_pdb/YYYYMMDD/ 와 rekordbox_xml/YYYYMMDD.xml. 새로고침은 캐시를 건너뜀
+  function loadLatest(fresh) {
+    $('usbStatus').textContent = '최신 파일 찾는 중…';
+    LatestData.load({ pdb: true, xml: true }, fresh).then(res => {
+      const d = LatestData.describe(res, { pdb: true, xml: true });
+      usb = null;
+      if (res.pdb) {
+        try { usb = D.usbTracks(RekordboxPdb.buildLibrary(RekordboxPdb.parseExport(res.pdb), null)); }
+        catch (err) { $('usbStatus').innerHTML = `<span class="err">USB export.pdb 읽기 실패 (${esc(err.message)})</span>`; return; }
+      }
+      $('usbStatus').innerHTML = `레포: ${esc(d.text)}${usb ? ` · USB 곡 ${usb.length}` : ''}${d.warn ? ` <span class="err">${esc(d.warn)}</span>` : ''}`;
+      if (res.xml) useXml(res.xml, `rekordbox_xml/${res.dates.xml}.xml`);
+      else $('status').textContent = '레포에 XML이 없어. 직접 열어줘.';
+    }).catch(err => { $('usbStatus').innerHTML = `<span class="err">최신 파일을 못 불러왔어 (${esc(err.message)})</span>`; });
+  }
+  $('refresh').addEventListener('click', () => loadLatest(true));
+  loadLatest(false);
 
   // ---- 탭·필터 ----
   document.querySelector('.tabs').addEventListener('click', e => {

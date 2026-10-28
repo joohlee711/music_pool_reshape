@@ -22,6 +22,8 @@ h1{font-size:24px;margin:6px 0 4px}
 .load{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:var(--mute)}
 .load label{border:1px solid var(--line);border-radius:4px;padding:4px 10px;cursor:pointer;color:var(--fg);background:var(--panel)}
 .load input{display:none}
+.load button{font:inherit;border:1px solid var(--acc);border-radius:4px;padding:4px 10px;cursor:pointer;color:var(--acc);background:var(--panel)}
+.warn{color:var(--warm)}
 .err{color:var(--warm)}
 .layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;margin-top:16px}
 .side{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px;overflow:auto;max-height:calc(100vh - 40px);position:sticky;top:16px;align-self:start}
@@ -68,8 +70,9 @@ tbody tr{cursor:pointer}
 <div class="w">
 <a class="back" href="../">← 홈으로</a>
 <h1>레코드박스 정보 보기</h1>
-<p class="lead">USB의 <code>export.pdb</code>·<code>exportExt.pdb</code>를 읽어서 보여주는 읽기 전용 페이지야. 기본은 레포에 올린 파일이고, 다른 USB 파일을 골라서 열 수도 있어. 고른 파일은 이 브라우저 안에서만 읽고 어디에도 올리지 않아.</p>
+<p class="lead">USB의 <code>export.pdb</code>·<code>exportExt.pdb</code>를 읽어서 보여주는 읽기 전용 페이지야. 기본은 레포 <code>usb_pdb/</code>의 가장 최근 날짜 폴더고, 다른 USB 파일을 골라서 열 수도 있어. 고른 파일은 이 브라우저 안에서만 읽고 어디에도 올리지 않아.</p>
 <div class="load">
+  <button type="button" id="refresh">↻ 새로고침</button>
   <label>export.pdb 열기<input type="file" id="fExp" accept=".pdb"></label>
   <label>exportExt.pdb 열기<input type="file" id="fExt" accept=".pdb"></label>
   <span id="src">불러오는 중…</span>
@@ -84,6 +87,7 @@ tbody tr{cursor:pointer}
 </div>
 </div>
 <script src="pdb.js"></script>
+<script src="../lib/latest.js"></script>
 <script>
 (function () {
   'use strict';
@@ -245,7 +249,7 @@ tbody tr{cursor:pointer}
     input.addEventListener('change', () => {
       const f = input.files[0];
       if (!f) return;
-      f.arrayBuffer().then(b => { cb(b); $('src').textContent = '직접 고른 파일: ' + f.name; tryBuild(); });
+      f.arrayBuffer().then(b => { picked = true; cb(b); $('src').textContent = '직접 고른 파일: ' + f.name; tryBuild(); });
     });
   }
   readFile($('fExp'), b => { expBuf = b; });
@@ -257,14 +261,22 @@ tbody tr{cursor:pointer}
     catch (err) { $('src').innerHTML = `<span class="err">읽기 실패: ${esc(err.message)}</span>`; }
   }
 
-  const get = url => fetch(url).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null);
-  Promise.all([get('../export.pdb'), get('../exportExt.pdb')]).then(([a, b]) => {
-    if (expBuf) return; // 그 사이 직접 고른 파일이 있으면 그걸 유지
-    if (!a) { $('src').innerHTML = '<span class="err">레포의 export.pdb를 못 불러왔어. 위 버튼으로 직접 열어줘.</span>'; return; }
-    expBuf = a; extBuf = b;
-    $('src').textContent = '레포에 올린 파일' + (b ? '' : ' (exportExt.pdb 없음)');
-    tryBuild();
-  });
+  // 레포의 최신 usb_pdb/YYYYMMDD/ 불러오기. 새로고침은 캐시를 건너뜀
+  let picked = false;
+  function loadLatest(fresh) {
+    $('src').textContent = '최신 파일 찾는 중…';
+    LatestData.load({ pdb: true, ext: true }, fresh).then(res => {
+      if (picked && !fresh) return; // 그 사이 직접 고른 파일이 있으면 그걸 유지
+      if (!res.pdb) { $('src').innerHTML = `<span class="err">레포 <code>usb_pdb/</code>에서 export.pdb를 못 찾았어. 위 버튼으로 직접 열어줘.</span>`; return; }
+      picked = false;
+      expBuf = res.pdb; extBuf = res.ext;
+      const d = LatestData.describe(res, { pdb: true });
+      $('src').innerHTML = `레포 ${esc(d.text)}${res.ext ? '' : ' (exportExt.pdb 없음)'}${d.warn ? ` <span class="warn">${esc(d.warn)}</span>` : ''}`;
+      tryBuild();
+    });
+  }
+  $('refresh').addEventListener('click', () => loadLatest(true));
+  loadLatest(false);
 })();
 </script>
 </body>
